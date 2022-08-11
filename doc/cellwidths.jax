@@ -1,0 +1,188 @@
+cellwidths.jax		setcellwidths() を使い易くします
+
+Author: delphinus <me@delphinus.dev>
+License: MIT license
+
+CONTENTS						   *cellwidths-contents*
+
+Introduction		|cellwidths-introduction|
+Install			|cellwidths-install|
+Usage			|cellwidths-usage|
+Features		|cellwidths-features|
+Caveats			|cellwidths-caveats|
+References		|cellwidths-references|
+
+==============================================================================
+INTRODUCTION					       *cellwidths-introduction*
+
+これは |setcellwidths()| を簡単に設定するためのプラグインです。一般に、この関数
+は以下のように利用されます。
+>
+	vim.fn.setcellwidths {
+	  { 0x2103, 0x2103, 2 },
+	  { 0x2160, 0x2169, 2 },
+	}
+<
+引数には `{ 開始, 終了, 文字幅 }` という配列の配列を指定するのですが、いくつかの
+理由から直接指定するのが困難です。
+
+  - 現在指定している値を後から参照出来ない。
+  - 値の追加、削除は出来ず、全ての配列を毎回指定しないといけない。
+  - |'listchars'| や |'fillchars'| に指定した値と被っていると設定に失敗する。
+
+このプラグインはこれらを解決します。
+
+==============================================================================
+INSTALL							    *cellwidths-install*
+
+|'packpath'| 配下のディレクトリにクローンして下さい。
+>
+	git clone https://github.com/delphinus/cellwidths.nvim \
+	  ~/.local/share/nvim/site/pack/foo/start/cellwidths.nvim
+
+|init.lua| で |cellwidths-features-setup| を呼び出すと使えます。
+>
+	-- 'listchars' と 'fillchars' を事前に設定しておくのがお勧めです。
+	-- vim.opt.listchars = { eol = "⏎" }
+	-- vim.opt.fillchars = { eob = "‣" }
+	require("cellwidths").setup {
+	  name = "default",
+	}
+
+または、好きなプラグインマネージャーを使って下さい。
+>
+	-- for packer.nvim
+	use {
+	  "delphinus/cellwidths.nvim",
+	  config = function()
+	    -- 'listchars' と 'fillchars' を事前に設定しておくのがお勧めです。
+	    -- vim.opt.listchars = { eol = "⏎" }
+	    -- vim.opt.fillchars = { eob = "‣" }
+	    require("cellwidths").setup {
+	      name = "default",
+	    }
+	  end,
+	}
+
+==============================================================================
+USAGE							      *cellwidths-usage*
+
+予め定められた値を利用するにはテンプレート名を指定して呼び出して下さい。
+>
+	require("cellwidths").setup { name = "default" }
+
+オリジナルの設定を作りたい場合は以下のようにして下さい。
+>
+	local cw = require "cellwidths"
+	-- 空っぽの設定から始める場合は { name = "empty" }
+	cw.setup { name = "default" }
+
+	-- 好きな設定を追加します。以下のどの書式でも構いません。
+	cw.add(0x2103, 2)
+	cw.add { 0x2160, 0x2169, 2 }
+	cw.add {
+	  { 0x2170, 0x2179, 2 },
+	  { 0x2190, 0x2193, 2 },
+	}
+
+	-- 名前を付けて保存
+	cw.save "foobar"
+
+	-- 次回からはその名前で呼び出せます。"user/" を頭に付けて下さい。
+	require("cellwidths").setup { name = "user/foobar" }
+
+予め提供されたテンプレートを指定する場合、毎回 |'listchars'|, |'fillchars'| の値と
+被っていないか検査します。自身で設定を保存した場合はこれが省かれるため、読み込
+みが高速化されます。
+
+NOTE: 設定を自作した後に |'listchars'| や |'fillchars'| を変更した場合、
+|cellwidths-features-setup| の呼び出し時にエラーになる恐れがあります。その時は上
+記のような設定をやり直して下さい（関数として保存しておくと良いでしょう）。
+
+==============================================================================
+FEATURES						   *cellwidths-features*
+
+						     *cellwidths-features-setup*
+setup()		プラグインを読み込みます。この関数を呼ばない限り、システムに影
+		響を与えることはありません。以下のようなオプションが指定出来ま
+		す。
+
+					        *cellwidths-features-setup-name*
+		name		(default: `"empty"`)
+				テンプレート名を指定します。以下の値が指定出来
+				ます。
+				- `"empty"`: 何も設定しません。
+				- `"default"`: |vim-ambiwidth| のデフォルト値です。
+				- `"cica"`: Cica フォント用の設定です。
+				- `"sfmono_square"`: SF Mono Square フォント用の
+						   設定です。
+				`"default"`, `"cica"` は以下のプラグインから拝借し
+				ています。
+				https://github.com/rbtnn/vim-ambiwidth
+
+					   *cellwidths-features-setup-log_level*
+		log_level	(default: `"INFO"`)
+				プラグインが表示する通知の最低レベルを指定しま
+				す。指定出来る値は |log_levels| を参照して下さい。
+
+						       *cellwidths-features-add*
+add()		設定を追加します。
+>
+		-- 一文字だけ指定します。
+		cw.add(0x2103, 2)
+		-- 文字範囲を指定します。
+		cw.add { 0x2160, 0x2169, 2 }
+		-- 複数指定することも可能です。
+		cw.add { { 0x2170, 0x2179, 2 }, { 0x2190, 0x2193, 2 } }
+<
+		NOTE: この関数は呼び出す度に値に矛盾が無いか調査し、配列を作り
+		直します。呼び出しにコスト掛かるため、|init.lua| 中では呼ばない
+		で下さい。
+
+						    *cellwidths-features-delete*
+delete()	指定した設定を削除します。引数に指定出来る値は
+		|cellwidths-features-add| と同じです。削除すべき値が存在しない場
+		合もエラーになりません。
+
+		NOTE: |cellwidths-features-add| と同様、この関数も |init.lua| 中で
+		は呼び出さないで下さい。
+
+set()		既存の設定を全て削除した上で、新しい設定を追加します。指定出来
+		る値は |cellwidths-features-add| と同じです。
+>
+		-- 設定を削除して何も追加しません。
+		cw.set()
+		-- 設定を削除して複数の文字範囲を追加します。
+		cw.set { { 0x2170, 0x2179, 2 }, { 0x2190, 0x2193, 2 } }
+
+save()		現在の設定をファイルに保存します。書き出し先はプラグインディレ
+		クトリの `lua/cellwidths/templates/user` 配下です。
+>
+		-- "user/custom" テンプレートに保存します。
+		cw.save "custom"
+
+		NOTE: 保存する際は現在の設定を Lua のバイトコードに変換して保
+		存しますので、書き出したファイルはそのままでは読めません。
+
+remove()	テンプレートを削除します。
+>
+		-- "user/custom" テンプレートを削除します。
+		cw.remove "custom"
+
+==============================================================================
+CAVEATS							    *cellwidths-caveats*
+
+このプラグインは |setcellwidths()| を実装した最新の Neovim で動作します。
+
+==============================================================================
+REFERENCES						 *cellwidths-references*
+
+- vim-ambiwidth
+  https://github.com/rbtnn/vim-ambiwidth
+- Cica フォント
+  https://github.com/miiton/Cica
+- SF Mono Square フォント
+  https://github.com/delphinus/homebrew-sfmono-square
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:noet:fen:noet:
