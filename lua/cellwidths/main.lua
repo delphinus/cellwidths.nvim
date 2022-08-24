@@ -39,7 +39,9 @@ function CellWidths:setup(opts)
     },
   }
   log.level = vim.log.levels[self.opts.log_level]
-  self:load(self.opts.name, true)
+  ---@type boolean
+  local is_custom = not not self.opts.name:match "^user%/"
+  self:load(self.opts.name, is_custom)
   return self
 end
 
