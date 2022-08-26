@@ -6,18 +6,21 @@ local log = require "cellwidths.log"
 
 -- The main class
 ---@class cellwidths.main.CellWidths
+---@field nvim cellwidths.nvim.Nvim
 ---@field default_options Options
 ---@field opts Options
 ---@field table cellwidths.table.Table
 local CellWidths = {}
 
 -- Constructor
+---@param nvim cellwidths.nvim.Nvim
 ---@return cellwidths.main.CellWidths
-CellWidths.new = function()
+CellWidths.new = function(nvim)
   local self = {
+    nvim = nvim,
     default_options = { name = "default", log_level = "INFO" },
     opts = {},
-    table = Table.new(),
+    table = Table.new(nvim),
   }
   return setmetatable(self, { __index = CellWidths })
 end
@@ -49,7 +52,7 @@ end
 ---@param no_clean_up boolean|nil
 ---@return nil
 function CellWidths:load(name, no_clean_up)
-  local template = Template.new(name)
+  local template = Template.new(self.nvim, name)
   if not template:exists() then
     log:error("template: %s not found", name)
     return
@@ -60,7 +63,7 @@ function CellWidths:load(name, no_clean_up)
     return
   end
   self.table:set(tbl, no_clean_up)
-  vim.fn.setcellwidths(self.table:get())
+  self.nvim.fn.setcellwidths(self.table:get())
   log:debug("successfully loaded the table from %s", name)
 end
 
@@ -83,7 +86,7 @@ end
 ---@param name string
 ---@return nil
 function CellWidths:save(name)
-  local template = Template.new("user/" .. name)
+  local template = Template.new(self.nvim, "user/" .. name)
   if not template:save(self.table:get()) then
     log:error("cannot save the table: %s", name)
     return
@@ -94,7 +97,7 @@ end
 ---@param name string
 ---@return nil
 function CellWidths:remove(name)
-  local template = Template.new("user/" .. name)
+  local template = Template.new(self.nvim, "user/" .. name)
   template:remove()
 end
 

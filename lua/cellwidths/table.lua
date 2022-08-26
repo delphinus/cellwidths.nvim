@@ -6,13 +6,15 @@ local log = require "cellwidths.log"
 ---@alias CharWidthMap table<string, cellwidths.table.CellWidth>
 
 ---@class cellwidths.table.Table
+---@field nvim cellwidths.nvim.Nvim
 ---@field cw_table cellwidths.table.CellWidthTable
 ---@field char_map CharWidthMap
 local Table = {}
 
+---@param nvim cellwidths.nvim.Nvim
 ---@param tbl cellwidths.table.CellWidthTable|nil
-Table.new = function(tbl)
-  local self = setmetatable({}, { __index = Table })
+Table.new = function(nvim, tbl)
+  local self = setmetatable({ nvim = nvim }, { __index = Table })
   self:set(tbl or {}, true)
   return self
 end
@@ -78,9 +80,9 @@ end
 ---@param map CharWidthMap
 ---@return CharWidthMap
 function Table:remove_overlaps(map)
-  for _, opt in ipairs { vim.opt.listchars:get(), vim.opt.fillchars:get() } do
+  for _, opt in ipairs { self.nvim.opt.listchars:get(), self.nvim.opt.fillchars:get() } do
     for _, v in pairs(opt) do
-      local key = tostring(vim.fn.char2nr(v, true))
+      local key = tostring(self.nvim.fn.char2nr(v, true))
       if map[key] == 2 then
         map[key] = 1
       end

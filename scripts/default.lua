@@ -1,7 +1,9 @@
+local Nvim = require "cellwidths.nvim"
 local Table = require "cellwidths.table"
 local Template = require "cellwidths.template"
 
-local tbl = Table.new {
+local nvim = Nvim.new()
+local tbl = Table.new(nvim, {
   { 0x2030, 0x203f, 2 },
   { 0x2103, 0x2103, 2 },
   { 0x2160, 0x2169, 2 },
@@ -36,7 +38,7 @@ local tbl = Table.new {
   { 0xe62e, 0xe62e, 2 },
   { 0xf315, 0xf316, 2 },
   { 0xf31b, 0xf31c, 2 },
-}
+})
 
-local tmpl = Template.new "default"
+local tmpl = Template.new(nvim, "default")
 tmpl:save(tbl:get())

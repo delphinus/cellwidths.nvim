@@ -1,6 +1,7 @@
 local CellWidths = require "cellwidths.main"
+local Nvim = require "cellwidths.nvim"
 local log = require "cellwidths.log"
-local cw = CellWidths.new()
+local cw = CellWidths.new(Nvim.new())
 
 return setmetatable({
   _exports = {

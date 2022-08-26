@@ -1,7 +1,7 @@
-local uv = vim.loop
 local log = require "cellwidths.log"
 
 ---@class cellwidths.file.Template
+---@field nvim cellwidths.nvim.Nvim
 ---@field dir string
 ---@field name string
 ---@field path string
@@ -13,10 +13,12 @@ local parent_dir = (function()
   return dir
 end)()
 
+---@param nvim cellwidths.nvim.Nvim
 ---@param name string
 ---@return cellwidths.file.Template
-Template.new = function(name)
+Template.new = function(nvim, name)
   local self = setmetatable({
+    nvim = nvim,
     dir = parent_dir,
     name = name,
     path = parent_dir .. "/templates/" .. name .. ".lua",
@@ -26,7 +28,7 @@ end
 
 ---@return boolean
 function Template:exists()
-  return not not uv.fs_stat(self.path)
+  return not not self.nvim.uv.fs_stat(self.path)
 end
 
 ---@return table|nil
@@ -56,7 +58,7 @@ end
 ---@param tbl table
 ---@return boolean
 function Template:save(tbl)
-  local fd = uv.fs_open(self.path, "w", tonumber("644", 8))
+  local fd = self.nvim.uv.fs_open(self.path, "w", tonumber("644", 8))
   if not fd then
     log:debug("cannot open file: %s", self.path)
     return false
@@ -67,19 +69,19 @@ function Template:save(tbl)
     return false
   end
   local code = string.dump(f, true)
-  err = uv.fs_write(fd, "return " .. vim.inspect(code))
+  err = self.nvim.uv.fs_write(fd, "return " .. vim.inspect(code))
   if type(err) ~= "number" then
     log:debug("cannot write code: %s", err)
     return false
   end
-  uv.fs_close(fd)
+  self.nvim.uv.fs_close(fd)
   return true
 end
 
 ---@return nil
 function Template:remove()
   if self:exists() then
-    local result = uv.fs_unlink(self.path)
+    local result = self.nvim.uv.fs_unlink(self.path)
     if result then
       log:info("successfully removed the template: %s", self.name)
     else
