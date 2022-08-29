@@ -1,4 +1,4 @@
----@class cellwidths.file.Template
+---@class cellwidths.template.Template
 ---@field nvim cellwidths.nvim.Nvim
 ---@field dir string
 ---@field name string
@@ -13,7 +13,7 @@ end)()
 
 ---@param nvim cellwidths.nvim.Nvim
 ---@param name string
----@return cellwidths.file.Template
+---@return cellwidths.template.Template
 Template.new = function(nvim, name)
   local self = setmetatable({
     nvim = nvim,
@@ -67,9 +67,9 @@ function Template:save(tbl)
     return false
   end
   local code = string.dump(f, true)
-  err = self.nvim.uv.fs_write(fd, "return " .. vim.inspect(code))
-  if type(err) ~= "number" then
-    self.nvim.log:debug("cannot write code: %s", err)
+  local result = self.nvim.uv.fs_write(fd, "return " .. vim.inspect(code))
+  if type(result) ~= "number" then
+    self.nvim.log:debug("cannot write code: %s", tostring(result))
     return false
   end
   self.nvim.uv.fs_close(fd)
