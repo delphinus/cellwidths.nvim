@@ -1,20 +1,22 @@
 local Log = require "cellwidths.log"
 
 ---@class Option
----@field get fun(self: Option): string
+---@field get fun(self: Option): { [string]: string }
 
----@alias cellwidths.nvim.Opt { listchars: Option, fillchars: Option }
+---@class cellwidths.nvim.Opt
+---@field listchars Option
+---@field fillchars Option
 
----@alias Char2nr fun(str: string, utf8: boolean|nil): integer
----@alias Setcellwidths fun(tbl: table): nil
----@alias cellwidths.nvim.Fn { char2nr: Char2nr, setcellwidths: Setcellwidths }
+---@class cellwidths.nvim.Fn
+---@field char2nr fun(str: string, utf8: boolean|nil): integer
+---@field setcellwidths fun(tbl: table): nil
 
----@alias FsClose fun(fd: number): nil
----@alias FsOpen fun(path: string, flags: string, mode: integer): integer|nil
----@alias FsStat fun(path: string): table|nil
----@alias FsUnlink fun(path: string): string|nil
----@alias FsWrite fun(fd: number, data: string): integer|nil
----@alias cellwidths.nvim.Uv { fs_close: FsClose, fs_open: FsOpen, fs_stat: FsStat, fs_unlink: FsUnlink, fs_write: FsWrite }
+---@class cellwidths.nvim.Uv
+---@field fs_close fun(fd: number): nil
+---@field fs_open fun(path: string, flags: string, mode: integer): integer|nil
+---@field fs_stat fun(path: string): table|nil
+---@field fs_unlink fun(path: string): string|nil
+---@field fs_write fun(fd: number, data: string): integer|nil
 
 ---@class cellwidths.nvim.Nvim
 ---@field fn cellwidths.nvim.Fn
