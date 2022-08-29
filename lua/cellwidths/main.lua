@@ -73,7 +73,8 @@ function CellWidths:add(entry, width)
   return self.table:add(entry, width)
 end
 
----@param tbl cellwidths.table.CellWidthTable|nil
+---@param entry cellwidths.table.CellWidthTable|nil
+---@param width cellwidths.table.CellWidth|nil
 ---@return nil
 function CellWidths:set(entry, width)
   self:load "empty"

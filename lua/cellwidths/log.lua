@@ -1,10 +1,10 @@
 ---@class cellwidths.log.Log
 ---@field name string
----@field notify fun(msg: string, level: integer): nil
+---@field notify fun(msg: string, level: number|nil, opts: table|nil): nil
 ---@field level integer
 local Log = {}
 
----@param notify fun(msg: string, level: number|nil, opts: table|nil) -> nil
+---@param notify fun(msg: string, level: number|nil, opts: table|nil): nil
 ---@return cellwidths.log.Log
 Log.new = function(notify)
   local self = {
