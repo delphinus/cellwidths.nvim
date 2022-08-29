@@ -1,5 +1,3 @@
-local log = require "cellwidths.log"
-
 ---@alias cellwidths.table.CellWidthEntry integer[]
 ---@alias cellwidths.table.CellWidth 1|2
 ---@alias cellwidths.table.CellWidthTable cellwidths.table.CellWidthEntry[]
@@ -37,7 +35,7 @@ end
 ---@return nil
 function Table:clean_up()
   if not self:is_valid_table(self.cw_table) then
-    log:error "invalid table"
+    self.nvim.log:error "invalid table"
     return
   end
   self.char_map = self:remove_overlaps(self:table_to_map(self.cw_table))
@@ -130,7 +128,7 @@ function Table:add(entry, width)
   elseif type(entry) == "number" then
     table.insert(self.cw_table, { entry, entry, width })
   else
-    log:error("invalid entry: %s", vim.inspect(entry))
+    self.nvim.log:error("invalid entry: %s", vim.inspect(entry))
     return self
   end
   self:clean_up()

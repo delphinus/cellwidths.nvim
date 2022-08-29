@@ -1,3 +1,5 @@
+local Log = require "cellwidths.log"
+
 ---@alias Option fun() -> { get: fun() -> string }
 ---@alias cellwidths.nvim.Opt { listchars: Option, fillchars: Option }
 
@@ -11,12 +13,12 @@
 ---@alias FsUnlink fun(path: string) -> string|nil
 ---@alias FsWrite fun(fd: number, data: string) -> integer|nil
 ---@alias cellwidths.nvim.Uv { fs_close: FsClose, fs_open: FsOpen, fs_stat: FsStat, fs_unlink: FsUnlink, fs_write: FsWrite }
---
 
 ---@class cellwidths.nvim.Nvim
 ---@field fn cellwidths.nvim.Fn
 ---@field opt cellwidths.nvim.Opt
 ---@field uv cellwidths.nvim.Uv
+---@field log cellwidths.log.Log
 local Nvim = {}
 
 ---@return cellwidths.nvim.Nvim
@@ -37,6 +39,7 @@ Nvim.new = function()
       fs_unlink = vim.loop.fs_unlink,
       fs_write = vim.loop.fs_write,
     },
+    log = Log.new(vim.notify),
   }
 end
 
