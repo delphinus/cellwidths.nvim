@@ -1,14 +1,15 @@
 ---@class cellwidths.log.Log
 ---@field name string
----@field notify fun(msg: string, level: integer): nil
+---@field notify fun(msg: string, level: number|nil, opts: table|nil): nil
 ---@field level integer
 local Log = {}
 
+---@param notify fun(msg: string, level: number|nil, opts: table|nil): nil
 ---@return cellwidths.log.Log
-Log.new = function()
+Log.new = function(notify)
   local self = {
     name = "cellwidths",
-    notify = vim.notify,
+    notify = notify,
     level = vim.log.levels.INFO,
   }
   return setmetatable(self, { __index = Log })
@@ -56,4 +57,4 @@ function Log:debug(fmt, ...)
   self:log(self:message(fmt, ...), vim.log.levels.DEBUG)
 end
 
-return Log.new()
+return Log

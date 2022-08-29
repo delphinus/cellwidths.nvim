@@ -1,6 +1,6 @@
 local CellWidths = require "cellwidths.main"
-local log = require "cellwidths.log"
-local cw = CellWidths.new()
+local Nvim = require "cellwidths.nvim"
+local cw = CellWidths.new(Nvim.new())
 
 return setmetatable({
   _exports = {
@@ -18,7 +18,7 @@ return setmetatable({
       self._cache[key] = self._exports[key] and function(...)
         cw[key](cw, ...)
       end or function()
-        log:error("unknown method: %s", key)
+        cw.nvim.log:error("unknown method: %s", key)
       end
     end
     return self._cache[key]

@@ -1,18 +1,18 @@
-local log = require "cellwidths.log"
-
 ---@alias cellwidths.table.CellWidthEntry integer[]
 ---@alias cellwidths.table.CellWidth 1|2
 ---@alias cellwidths.table.CellWidthTable cellwidths.table.CellWidthEntry[]
 ---@alias CharWidthMap table<string, cellwidths.table.CellWidth>
 
 ---@class cellwidths.table.Table
+---@field nvim cellwidths.nvim.Nvim
 ---@field cw_table cellwidths.table.CellWidthTable
 ---@field char_map CharWidthMap
 local Table = {}
 
+---@param nvim cellwidths.nvim.Nvim
 ---@param tbl cellwidths.table.CellWidthTable|nil
-Table.new = function(tbl)
-  local self = setmetatable({}, { __index = Table })
+Table.new = function(nvim, tbl)
+  local self = setmetatable({ nvim = nvim }, { __index = Table })
   self:set(tbl or {}, true)
   return self
 end
@@ -35,7 +35,7 @@ end
 ---@return nil
 function Table:clean_up()
   if not self:is_valid_table(self.cw_table) then
-    log:error "invalid table"
+    self.nvim.log:error "invalid table"
     return
   end
   self.char_map = self:remove_overlaps(self:table_to_map(self.cw_table))
@@ -78,9 +78,9 @@ end
 ---@param map CharWidthMap
 ---@return CharWidthMap
 function Table:remove_overlaps(map)
-  for _, opt in ipairs { vim.opt.listchars:get(), vim.opt.fillchars:get() } do
+  for _, opt in ipairs { self.nvim.opt.listchars:get(), self.nvim.opt.fillchars:get() } do
     for _, v in pairs(opt) do
-      local key = tostring(vim.fn.char2nr(v, true))
+      local key = tostring(self.nvim.fn.char2nr(v, true))
       if map[key] == 2 then
         map[key] = 1
       end
@@ -128,7 +128,7 @@ function Table:add(entry, width)
   elseif type(entry) == "number" then
     table.insert(self.cw_table, { entry, entry, width })
   else
-    log:error("invalid entry: %s", vim.inspect(entry))
+    self.nvim.log:error("invalid entry: %s", vim.inspect(entry))
     return self
   end
   self:clean_up()
