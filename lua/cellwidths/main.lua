@@ -73,9 +73,16 @@ function CellWidths:add(entry, width)
   return self.table:add(entry, width)
 end
 
----@param entry cellwidths.table.CellWidthTable|nil
----@param width cellwidths.table.CellWidth|nil
----@return nil
+---@param entry integer[]|integer
+---@return cellwidths.main.CellWidths
+function CellWidths:delete(entry)
+  self.table:delete(entry)
+  return self
+end
+
+---@param entry cellwidths.table.CellWidthTable?
+---@param width cellwidths.table.CellWidth?
+---@return cellwidths.main.CellWidths
 function CellWidths:set(entry, width)
   self:load "empty"
   if entry then

@@ -135,6 +135,19 @@ function Table:add(entry, width)
   return self
 end
 
+---@param entry integer[]|integer
+---@return nil
+function Table:delete(entry)
+  local char_map = self:char_map()
+  local entries = type(entry) == "table" and entry or { entry }
+  for _, v in ipairs(entries) do
+    if char_map[v] then
+      char_map[v] = nil
+    end
+  end
+  self:cw_table_from(char_map)
+end
+
 ---@return string
 function Table:dump()
   ---@type string
