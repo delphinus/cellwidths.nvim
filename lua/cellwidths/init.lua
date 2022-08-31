@@ -3,6 +3,7 @@ local Nvim = require "cellwidths.nvim"
 local cw = CellWidths.new(Nvim.new())
 
 return setmetatable({
+  cw = cw,
   _exports = {
     add = true,
     delete = true,
