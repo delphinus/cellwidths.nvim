@@ -7,8 +7,8 @@ return setmetatable({
   _exports = {
     add = true,
     delete = true,
+    load = true,
     remove = true,
-    set = true,
     setup = true,
   },
   _cache = {},

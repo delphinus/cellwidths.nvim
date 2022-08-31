@@ -135,17 +135,6 @@ function CellWidths:delete(entry)
   return self
 end
 
----@param entry cellwidths.table.CellWidthTable?
----@param width cellwidths.table.CellWidth?
----@return cellwidths.main.CellWidths
-function CellWidths:set(entry, width)
-  self:load "empty"
-  if entry then
-    self:add(entry, width)
-  end
-  return self
-end
-
 ---@param name string
 ---@return nil
 function CellWidths:remove(name)
