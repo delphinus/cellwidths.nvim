@@ -85,17 +85,6 @@ end
 
 ---@param name string
 ---@return nil
-function CellWidths:save(name)
-  local template = Template.new(self.nvim, "user/" .. name)
-  if not template:save(self.table:get()) then
-    self.nvim.log:error("cannot save the table: %s", name)
-    return
-  end
-  self.nvim.log:info("successfully saved the table: %s", name)
-end
-
----@param name string
----@return nil
 function CellWidths:remove(name)
   local template = Template.new(self.nvim, "user/" .. name)
   template:remove()

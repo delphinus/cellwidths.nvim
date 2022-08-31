@@ -8,7 +8,6 @@ return setmetatable({
     add = true,
     delete = true,
     remove = true,
-    save = true,
     set = true,
     setup = true,
   },
