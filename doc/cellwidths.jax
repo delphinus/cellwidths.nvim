@@ -8,6 +8,8 @@ CONTENTS						   *cellwidths-contents*
 Introduction		|cellwidths-introduction|
 Install			|cellwidths-install|
 Usage			|cellwidths-usage|
+  Further Usecase	|cellwidths-usage-further-usecase|
+  Debugging		|cellwidths-usage-debugging|
 Features		|cellwidths-features|
 Caveats			|cellwidths-caveats|
 References		|cellwidths-references|
@@ -73,31 +75,86 @@ USAGE							      *cellwidths-usage*
 
 オリジナルの設定を作りたい場合は以下のようにして下さい。
 >
-	local cw = require "cellwidths"
-	-- 空っぽの設定から始める場合は { name = "empty" }
-	cw.setup { name = "default" }
+	require("cellwidths").setup {
+	  name = "user/custom",
+	  ---@param cw cellwidths.main.CellWidths
+	  fallback = function(cw)
+	    -- 特定のテンプレートから追加・削除を行いたい場合は最初に load() を呼んで下さい。
+	    -- cw.load "default"
 
-	-- 好きな設定を追加します。以下のどの書式でも構いません。
-	cw.add(0x2103, 2)
-	cw.add { 0x2160, 0x2169, 2 }
-	cw.add {
-	  { 0x2170, 0x2179, 2 },
-	  { 0x2190, 0x2193, 2 },
+	    -- 好きな設定を追加します。以下のどの書式でも構いません。
+	    cw.add(0x2103, 2)
+	    cw.add { 0x2160, 0x2169, 2 }
+	    cw.add {
+	      { 0x2170, 0x2179, 2 },
+	      { 0x2190, 0x2193, 2 },
+	    }
+
+	    -- 削除も出来ます。設定に存在しないコードポイントを指定してもエラーになりません。
+	    cw.delete(0x2103)
+	    cw.delete { 0x2104, 0x2105, 0x2106 }
+	  end,
 	}
-
-	-- 名前を付けて保存
-	cw.save "foobar"
-
-	-- 次回からはその名前で呼び出せます。"user/" を頭に付けて下さい。
-	require("cellwidths").setup { name = "user/foobar" }
 
 予め提供されたテンプレートを指定する場合、毎回 |'listchars'|, |'fillchars'| の値と
 被っていないか検査します。自身で設定を保存した場合はこれが省かれるため、読み込
 みが高速化されます。
 
-NOTE: 設定を自作した後に |'listchars'| や |'fillchars'| を変更した場合、
-|cellwidths-features-setup| の呼び出し時にエラーになる恐れがあります。その時は上
-記のような設定をやり直して下さい（関数として保存しておくと良いでしょう）。
+設定を保存したファイルはプラグイントップの `lua/templates/user/custom.lua` のよ
+うなパスに保存されます。これには設定時の |'listchars'|, |'fillchars'| の値も保存さ
+れ、次回以降、起動時に値が異なっていた場合は自動的に作り直されます。
+
+------------------------------------------------------------------------------
+FURTHER USECASE				      *cellwidths-usage-further-usecase*
+
+テンプレートは |string.dump()| でコンパイルした状態で保存されるため読み込みも高
+速ですが、予め提供されたテンプレートは |'listchars'|, |'fillchars'| の値と被ってい
+ないか毎回検査されるため多少処理が重くなります。何も設定を増減しない場合でも、
+`user/foo` テンプレートとして利用する方が高速になります。
+>
+	require("cellwidths").setup {
+	  name = "user/default",
+	  ---@param cw cellwidths.main.CellWidths
+	  fallback = function(cw)
+	    -- "default" テンプレートをそのまま使う。
+	    cw:load "default"
+	  end,
+	}
+
+ただし、これではプラグインで `"default"` テンプレートが更新された場合に追従出来
+ません。プラグインの更新時には一度 |cellwidths-features-remove| で削除した方が良
+いでしょう。
+>
+	-- packer.nvim なら以下のように書けるでしょう。
+	use {
+	  "delphinus/cellwidths.nvim",
+	  config = function()
+	    require("cellwidths").setup {
+	      name = "user/default"
+	      ---@param cw cellwidths.main.CellWidths
+	      fallback = function(cw)
+	        cw:load "default"
+	        -- 何らかのカスタマイズを行う。
+	        cw:add ...
+	      end,
+	    }
+	  end,
+	  run = function()
+	    -- プラグイン更新時には一旦削除する。
+	    require("cellwidths").remove "user/default"
+	  end,
+	}
+
+------------------------------------------------------------------------------
+DEBUGGING					    *cellwidths-usage-debugging*
+
+|cellwidths-features-setup-log_level| に `"DEBUG"` を指定すると読み込みに掛かった
+時間を取得出来ます。
+>
+	[cellwidths] successfully loaded the table from user/custom
+	[cellwidths] setup() has taken 0.000717 milliseconds
+
+`"TRACE"` を指定すると更に詳細な情報が得られます。
 
 ==============================================================================
 FEATURES						   *cellwidths-features*
@@ -120,10 +177,22 @@ setup()		プラグインを読み込みます。この関数を呼ばない限�
 				ています。
 				https://github.com/rbtnn/vim-ambiwidth
 
+				これらのテンプレートをカスタムして使う場合は
+				`"user/foo"` といった名称を指定して下さい。この
+				場合は |cellwidths-features-setup-fallback| が必
+				須になります。
+
 					   *cellwidths-features-setup-log_level*
 		log_level	(default: `"INFO"`)
 				プラグインが表示する通知の最低レベルを指定しま
 				す。指定出来る値は |log_levels| を参照して下さい。
+
+					    *cellwidths-features-setup-fallback*
+		fallback	(default: `nil`)
+				独自の設定を作る関数を指定します。引数には
+				`cellwidths.main.CellWidths` クラスのインスタン
+				スが与えられます。利用例は |cellwidths-usage| を
+				参照して下さい。
 
 						       *cellwidths-features-add*
 add()		設定を追加します。
@@ -135,40 +204,25 @@ add()		設定を追加します。
 		-- 複数指定することも可能です。
 		cw.add { { 0x2170, 0x2179, 2 }, { 0x2190, 0x2193, 2 } }
 <
-		NOTE: この関数は呼び出す度に値に矛盾が無いか調査し、配列を作り
-		直します。呼び出しにコスト掛かるため、|init.lua| 中では呼ばない
-		で下さい。
-
 						    *cellwidths-features-delete*
-delete()	指定した設定を削除します。引数に指定出来る値は
-		|cellwidths-features-add| と同じです。削除すべき値が存在しない場
-		合もエラーになりません。
-
-		NOTE: |cellwidths-features-add| と同様、この関数も |init.lua| 中で
-		は呼び出さないで下さい。
-
-set()		既存の設定を全て削除した上で、新しい設定を追加します。指定出来
-		る値は |cellwidths-features-add| と同じです。
+delete()	指定した設定を削除します。削除すべき値が存在しない場合もエラー
+		になりません。
 >
-		-- 設定を削除して何も追加しません。
-		cw.set()
-		-- 設定を削除して複数の文字範囲を追加します。
-		cw.set { { 0x2170, 0x2179, 2 }, { 0x2190, 0x2193, 2 } }
-
-save()		現在の設定をファイルに保存します。書き出し先はプラグインディレ
-		クトリの `lua/cellwidths/templates/user` 配下です。
+		cw.delete(0x2103)
+		-- 複数指定することも出来ます。
+		cw.delete { 0x2104, 0x2105 }
+<
+						      *cellwidths-features-load*
+load()		テンプレートを読み込みます。
 >
-		-- "user/custom" テンプレートに保存します。
-		cw.save "custom"
-
-		NOTE: 保存する際は現在の設定を Lua のバイトコードに変換して保
-		存しますので、書き出したファイルはそのままでは読めません。
-
+		cw.load "default"
+<
+						    *cellwidths-features-remove*
 remove()	テンプレートを削除します。
 >
 		-- "user/custom" テンプレートを削除します。
 		cw.remove "custom"
-
+<
 ==============================================================================
 CAVEATS							    *cellwidths-caveats*
 

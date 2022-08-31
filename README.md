@@ -61,26 +61,29 @@ use {
 require("cellwidths").setup { name = "default" }
 ```
 
-オリジナルの設定を作りたい場合は以下のようにして下さい。
+オリジナルの設定を作りたい場合は以下のようにして下さい。`fallback()` 関数で呼ばれた内容がファイルに保存され、次回起動時からは高速に読み込まれます。
 
 ```lua
-local cw = require "cellwidths"
--- 空っぽの設定から始める場合は { name = "empty" }
-cw.setup { name = "default" }
+require("cellwidths").setup {
+  name = "user/custom",
+  ---@param cw cellwidths.main.CellWidths
+  fallback = function(cw)
+    -- 特定のテンプレートから追加・削除を行いたい場合は最初に load() を呼んで下さい。
+    -- cw.load "default"
 
--- 好きな設定を追加します。以下のどの書式でも構いません。
-cw.add(0x2103, 2)
-cw.add { 0x2160, 0x2169, 2 }
-cw.add {
-  { 0x2170, 0x2179, 2 },
-  { 0x2190, 0x2193, 2 },
+    -- 好きな設定を追加します。以下のどの書式でも構いません。
+    cw.add(0x2103, 2)
+    cw.add { 0x2160, 0x2169, 2 }
+    cw.add {
+      { 0x2170, 0x2179, 2 },
+      { 0x2190, 0x2193, 2 },
+    }
+
+    -- 削除も出来ます。設定に存在しないコードポイントを指定してもエラーになりません。
+    cw.delete(0x2103)
+    cw.delete { 0x2104, 0x2105, 0x2106 }
+  end,
 }
-
--- 名前を付けて保存
-cw.save "foobar"
-
--- 次回からはその名前で呼び出せます。"user/" を頭に付けて下さい。
-require("cellwidths").setup { name = "user/foobar" }
 ```
 
 より詳しい使い方は[ヘルプ][doc/cellwidths.jax]を見て下さい。
