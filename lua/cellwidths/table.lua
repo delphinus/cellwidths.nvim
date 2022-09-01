@@ -123,7 +123,7 @@ function Table:add(entry, width)
   elseif type(entry) == "number" then
     table.insert(self.cw_table, { entry, entry, width })
   else
-    self.nvim.log:error("invalid entry: %s", vim.inspect(entry))
+    self.nvim.log:error("invalid entry: %s", entry)
     return self
   end
   self:clean_up()
