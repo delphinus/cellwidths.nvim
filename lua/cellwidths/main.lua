@@ -1,7 +1,7 @@
----@class Options
+---@class cellwidths.main.Options
 ---@field name string
----@field fallback fun(self: cellwidths.main.CellWidths): cellwidths.main.CellWidths
----@field log_level integer
+---@field fallback fun(self: cellwidths): cellwidths
+---@field log_level string
 
 local Table = require "cellwidths.table"
 local Template = require "cellwidths.template"
@@ -10,8 +10,8 @@ local UserTemplate = require "cellwidths.user_template"
 -- The main class
 ---@class cellwidths.main.CellWidths
 ---@field nvim cellwidths.nvim.Nvim
----@field default_options Options
----@field opts Options
+---@field default_options cellwidths.main.Options
+---@field opts cellwidths.main.Options
 ---@field table cellwidths.table.Table
 local CellWidths = {}
 
@@ -28,7 +28,7 @@ CellWidths.new = function(nvim)
 end
 
 -- The bootstrap function. Users should call this at the first.
----@param opts Options?
+---@param opts cellwidths.main.Options?
 ---@return cellwidths.main.CellWidths
 function CellWidths:setup(opts)
   local s = os.clock()
@@ -66,7 +66,8 @@ function CellWidths:setup(opts)
     ---@return cellwidths.table.CellWidthTable
     local function fallback()
       self:load "empty"
-      self.opts.fallback(self)
+      local cw = require "cellwidths"
+      self.opts.fallback(cw)
       return self.table:get()
     end
 

@@ -14,7 +14,7 @@ local UserTemplate = setmetatable({}, { __index = Template })
 
 ---@param nvim cellwidths.nvim.Nvim
 ---@param name string
----@param fallback fun(): nil
+---@param fallback fun(): cellwidths.table.CellWidthTable
 ---@return cellwidths.user_template.UserTemplate
 UserTemplate.new = function(nvim, name, fallback)
   return setmetatable({ nvim = nvim, name = name, fallback = fallback }, { __index = UserTemplate })

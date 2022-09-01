@@ -66,7 +66,7 @@ require("cellwidths").setup { name = "default" }
 ```lua
 require("cellwidths").setup {
   name = "user/custom",
-  ---@param cw cellwidths.main.CellWidths
+  ---@param cw cellwidths
   fallback = function(cw)
     -- 特定のテンプレートから追加・削除を行いたい場合は最初に load() を呼んで下さい。
     -- cw.load "default"
