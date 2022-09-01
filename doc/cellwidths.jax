@@ -10,6 +10,7 @@ Install			|cellwidths-install|
 Usage			|cellwidths-usage|
   Further Usecase	|cellwidths-usage-further-usecase|
   Debugging		|cellwidths-usage-debugging|
+  Developing		|cellwidths-usage-developing|
 Features		|cellwidths-features|
 Caveats			|cellwidths-caveats|
 References		|cellwidths-references|
@@ -155,6 +156,17 @@ DEBUGGING					    *cellwidths-usage-debugging*
 	[cellwidths] setup() has taken 0.000717 milliseconds
 
 `"TRACE"` を指定すると更に詳細な情報が得られます。
+
+------------------------------------------------------------------------------
+DEVELOPING					   *cellwidths-usage-developing*
+
+このプラグインのソースには `lua-language-server` に対応した Type Annotations を
+記載しています。|LSP| のセットアップを行うことで型などの情報が表示出来ます。
+
+https://github.com/sumneko/lua-language-server
+>
+	-- cellwidths クラスとして認識されます。
+	local cw = require "cellwidths"
 
 ==============================================================================
 FEATURES						   *cellwidths-features*
