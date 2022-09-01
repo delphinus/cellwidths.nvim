@@ -78,7 +78,7 @@ function CellWidths:setup(opts)
 
   self:load_template(tmpl)
 
-  self.nvim.log:debug("setup() has taken %s milliseconds", os.clock() - s)
+  self.nvim.log:debug("setup() has taken %s milliseconds", (os.clock() - s) * 1000)
   return self
 end
 

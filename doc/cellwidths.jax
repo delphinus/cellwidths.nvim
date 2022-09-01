@@ -155,7 +155,7 @@ DEBUGGING					    *cellwidths-usage-debugging*
 時間を取得出来ます。
 >
 	[cellwidths] successfully loaded the table from user/custom
-	[cellwidths] setup() has taken 0.000717 milliseconds
+	[cellwidths] setup() has taken 0.717 milliseconds
 
 `"TRACE"` を指定すると更に詳細な情報が得られます。
 
