@@ -97,6 +97,7 @@ end
 ---@param name string
 ---@return cellwidths.main.CellWidths
 function CellWidths:load(name)
+  self.nvim.log:trace("name: %s", name)
   local tmpl = Template.new(self.nvim, name)
   self:load_template(tmpl)
   return self
@@ -130,6 +131,7 @@ end
 ---@param width cellwidths.table.CellWidth?
 ---@return cellwidths.main.CellWidths
 function CellWidths:add(entry, width)
+  self.nvim.log:trace("entry: %s, width: %s", entry, width)
   self.table:add(entry, width)
   return self
 end
@@ -137,6 +139,7 @@ end
 ---@param entry integer[]|integer
 ---@return cellwidths.main.CellWidths
 function CellWidths:delete(entry)
+  self.nvim.log:trace("entry: %s", entry)
   self.table:delete(entry)
   return self
 end
@@ -144,6 +147,7 @@ end
 ---@param name string
 ---@return nil
 function CellWidths:remove(name)
+  self.nvim.log:trace("name: %s", name)
   if self:is_user_template_name(name) then
     local tmpl = UserTemplate.new(self.nvim, name, function() end)
     tmpl:remove()
