@@ -11,7 +11,8 @@ Usage			|cellwidths-usage|
   Further Usecase	|cellwidths-usage-further-usecase|
   Debugging		|cellwidths-usage-debugging|
   Developing		|cellwidths-usage-developing|
-Features		|cellwidths-features|
+Functions		|cellwidths-functions|
+Commands		|cellwidths-commands|
 Caveats			|cellwidths-caveats|
 References		|cellwidths-references|
 
@@ -43,7 +44,7 @@ INSTALL							    *cellwidths-install*
 	git clone https://github.com/delphinus/cellwidths.nvim \
 	  ~/.local/share/nvim/site/pack/foo/start/cellwidths.nvim
 
-|init.lua| で |cellwidths-features-setup| を呼び出すと使えます。
+|init.lua| で |cellwidths-functions-setup| を呼び出すと使えます。
 >
 	-- 'listchars' と 'fillchars' を事前に設定しておくのがお勧めです。
 	-- vim.opt.listchars = { eol = "⏎" }
@@ -107,6 +108,18 @@ USAGE							      *cellwidths-usage*
 うなパスに保存されます。これには設定時の |'listchars'|, |'fillchars'| の値も保存さ
 れ、次回以降、起動時に値が異なっていた場合は自動的に作り直されます。
 
+設定のテスト中など、Neovim の起動中に設定を変更する場合は |cellwidths-commands|
+を使うと便利です。
+>
+	" 「℃」を全角で扱います。
+	:CellWidthsAdd 0x2103, 2
+	" 設定を削除します。
+	:CellWidthsDelete 0x2103
+	" テンプレートを読み込みます。
+	:CellWidthsLoad default
+	" （現在利用中の）テンプレートを削除します。
+	:CellWidthsRemove
+
 ------------------------------------------------------------------------------
 FURTHER USECASE				      *cellwidths-usage-further-usecase*
 
@@ -125,8 +138,8 @@ FURTHER USECASE				      *cellwidths-usage-further-usecase*
 	}
 
 ただし、これではプラグインで `"default"` テンプレートが更新された場合に追従出来
-ません。プラグインの更新時には一度 |cellwidths-features-remove| で削除した方が良
-いでしょう。
+ません。プラグインの更新時には一度 |cellwidths-functions-remove| か、
+|:CellWidthsRemove| で削除した方が良いでしょう。
 >
 	-- packer.nvim なら以下のように書けるでしょう。
 	use {
@@ -144,14 +157,16 @@ FURTHER USECASE				      *cellwidths-usage-further-usecase*
 	  end,
 	  run = function()
 	    -- プラグイン更新時には一旦削除する。
-	    require("cellwidths").remove "user/default"
+	    require("cellwidths").remove
+	    -- ex コマンドも用意しています。
+	    -- vim.cmd[[CellWidthsRemove]]
 	  end,
 	}
 
 ------------------------------------------------------------------------------
 DEBUGGING					    *cellwidths-usage-debugging*
 
-|cellwidths-features-setup-log_level| に `"DEBUG"` を指定すると読み込みに掛かった
+|cellwidths-functions-setup-log_level| に `"DEBUG"` を指定すると読み込みに掛かった
 時間を取得出来ます。
 >
 	[cellwidths] successfully loaded the table from user/custom
@@ -171,14 +186,14 @@ https://github.com/sumneko/lua-language-server
 	local cw = require "cellwidths"
 
 ==============================================================================
-FEATURES						   *cellwidths-features*
+FUNCTIONS						  *cellwidths-functions*
 
-						     *cellwidths-features-setup*
+						    *cellwidths-functions-setup*
 setup()		プラグインを読み込みます。この関数を呼ばない限り、システムに影
 		響を与えることはありません。以下のようなオプションが指定出来ま
 		す。
 
-					        *cellwidths-features-setup-name*
+					       *cellwidths-functions-setup-name*
 		name		(default: `"empty"`)
 				テンプレート名を指定します。以下の値が指定出来
 				ます。
@@ -193,21 +208,21 @@ setup()		プラグインを読み込みます。この関数を呼ばない限�
 
 				これらのテンプレートをカスタムして使う場合は
 				`"user/foo"` といった名称を指定して下さい。この
-				場合は |cellwidths-features-setup-fallback| が必
-				須になります。
+				場合は |cellwidths-functions-setup-fallback| が
+				必須になります。
 
-					   *cellwidths-features-setup-log_level*
+					  *cellwidths-functions-setup-log_level*
 		log_level	(default: `"INFO"`)
 				プラグインが表示する通知の最低レベルを指定しま
 				す。指定出来る値は |log_levels| を参照して下さい。
 
-					    *cellwidths-features-setup-fallback*
+					   *cellwidths-functions-setup-fallback*
 		fallback	(default: `nil`)
 				独自の設定を作る関数を指定します。引数には
 				`cellwidths` クラスのインスタンスが与えられます。
 				利用例は |cellwidths-usage| を参照して下さい。
 
-						       *cellwidths-features-add*
+						      *cellwidths-functions-add*
 add()		設定を追加します。
 >
 		-- 一文字だけ指定します。
@@ -217,7 +232,7 @@ add()		設定を追加します。
 		-- 複数指定することも可能です。
 		cw.add { { 0x2170, 0x2179, 2 }, { 0x2190, 0x2193, 2 } }
 <
-						    *cellwidths-features-delete*
+						   *cellwidths-functions-delete*
 delete()	指定した設定を削除します。削除すべき値が存在しない場合もエラー
 		になりません。
 >
@@ -225,17 +240,62 @@ delete()	指定した設定を削除します。削除すべき値が存在し�
 		-- 複数指定することも出来ます。
 		cw.delete { 0x2104, 0x2105 }
 <
-						      *cellwidths-features-load*
+						     *cellwidths-functions-load*
 load()		テンプレートを読み込みます。
 >
 		cw.load "default"
 <
-						    *cellwidths-features-remove*
-remove()	テンプレートを削除します。
+						   *cellwidths-functions-remove*
+remove()	テンプレートを削除します。`user/` 接頭辞は省いても自動的に補われ
+		ます。引数を省略した場合、現在利用中のテンプレートを削除します。
+
+		NOTE: プラグイン規定のテンプレートは削除出来ません。
 >
 		-- "user/custom" テンプレートを削除します。
 		cw.remove "custom"
+
+		-- 現在利用中のテンプレートを削除します。
+		cw.remove()
 <
+==============================================================================
+COMMANDS						   *cellwidths-commands*
+
+								*:CellWidthsAdd*
+:CellWidthsAdd {args}		設定を追加します。{args} は Lua の式として評価
+				されますので、|cellwidths-functions-add| と同様
+				のものが指定出来ます。
+>
+				:CellWidthsAdd 0x2103, 2
+				:CellWidthsAdd { 0x2160, 0x2169, 2 }
+				:CellWidthsAdd { { 0x2170, 0x2179, 2 } }
+<
+							     *:CellWidthsDelete*
+:CellWidthsDelete {args}	設定を削除します。{args} は Lua の式として評価
+				されますので、|cellwidths-functions-delete| と同
+				様のものが指定出来ます。
+>
+				:CellWidthsDelete 0x2103
+				:CellWidthsDelete { 0x2104, 0x2105 }
+<
+							       *:CellWidthsLoad*
+:CellWidthsLoad {args}		テンプレートを読み込みます。
+>
+				:CellWidthsLoad user/custom
+<
+							     *:CellWidthsRemove*
+:CellWidthsRemove {args}	テンプレートを削除します。`user/` 接頭辞は省いて
+				も自動的に補われます。引数を省略した場合、現在
+				利用中のテンプレートが削除されます。
+
+				NOTE: プラグイン規定のテンプレートは削除出来ま
+				せん。
+>
+				" どちらも同じ意味です。
+				:CellWidthsRemove custom
+
+				" 現在利用中のものを削除します。
+				:CellWidthsRemove
+
 ==============================================================================
 CAVEATS							    *cellwidths-caveats*
 
