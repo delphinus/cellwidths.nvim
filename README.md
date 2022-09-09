@@ -2,7 +2,7 @@
 
 Yet another `setcellwidths()` wrapper.
 
-English version README is here →[README.en.md][]
+<!-- English version README is here →[README.en.md](/README.en.md) -->
 
 ## これは何？
 
@@ -103,7 +103,7 @@ Neovim を起動中にオンデマンドで設定を変更することも可能�
 :CellWidthsRemove
 ```
 
-より詳しい使い方は[ヘルプ][doc/cellwidths.jax]を見て下さい。
+より詳しい使い方は[ヘルプ](/doc/cellwidths.jax)を見て下さい。
 
 ## リンク
 
