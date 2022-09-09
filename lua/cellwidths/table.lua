@@ -136,8 +136,9 @@ function Table:delete(entry)
   local char_map = self:char_map()
   local entries = type(entry) == "table" and entry or { entry }
   for _, v in ipairs(entries) do
-    if char_map[v] then
-      char_map[v] = nil
+    local k = tostring(v)
+    if char_map[k] then
+      char_map[k] = nil
     end
   end
   self:cw_table_from(char_map)

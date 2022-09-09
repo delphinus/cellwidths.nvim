@@ -2,7 +2,9 @@
 ---@field name string
 ---@field fallback fun(self: cellwidths): cellwidths
 ---@field log_level string
+---@field initialized boolean
 
+local Args = require "cellwidths.args"
 local Table = require "cellwidths.table"
 local Template = require "cellwidths.template"
 local UserTemplate = require "cellwidths.user_template"
@@ -24,6 +26,7 @@ CellWidths.new = function(nvim)
     nvim = nvim,
     opts = {},
     table = Table.new(nvim),
+    initialized = false,
   }, { __index = CellWidths })
 end
 
@@ -77,6 +80,8 @@ function CellWidths:setup(opts)
   end
 
   self:load_template(tmpl)
+  self:setup_commands()
+  self.initialized = true
 
   self.nvim.log:debug("setup() has taken %s milliseconds", (os.clock() - s) * 1000)
   return self
@@ -92,6 +97,7 @@ end
 ---@param name string
 ---@return cellwidths.main.CellWidths
 function CellWidths:load(name)
+  self.nvim.log:trace("name: %s", name)
   local tmpl = Template.new(self.nvim, name)
   self:load_template(tmpl)
   return self
@@ -121,10 +127,11 @@ function CellWidths:load_template(tmpl)
   self.nvim.log:debug("successfully loaded the table from %s", tmpl.name)
 end
 
----@param entry cellwidths.table.CellWidthEntry
+---@param entry cellwidths.table.CellWidthTable|cellwidths.table.CellWidthEntry|integer
 ---@param width cellwidths.table.CellWidth?
 ---@return cellwidths.main.CellWidths
 function CellWidths:add(entry, width)
+  self.nvim.log:trace("entry: %s, width: %s", entry, width)
   self.table:add(entry, width)
   return self
 end
@@ -132,6 +139,7 @@ end
 ---@param entry integer[]|integer
 ---@return cellwidths.main.CellWidths
 function CellWidths:delete(entry)
+  self.nvim.log:trace("entry: %s", entry)
   self.table:delete(entry)
   return self
 end
@@ -139,12 +147,89 @@ end
 ---@param name string
 ---@return nil
 function CellWidths:remove(name)
+  self.nvim.log:trace("name: %s", name)
   if self:is_user_template_name(name) then
     local tmpl = UserTemplate.new(self.nvim, name, function() end)
     tmpl:remove()
   else
     self.nvim.log:error("cannot remove non-user templates: %s", name)
   end
+end
+
+---@return nil
+function CellWidths:apply()
+  self.nvim.fn.setcellwidths(self.table:get())
+end
+
+---@return nil
+function CellWidths:setup_commands()
+  ---@param f fun(args: cellwidths.args.Args): nil
+  ---@return fun(info: table): nil
+  local function wrap(f)
+    ---@param info table
+    return function(info)
+      if not self.initialized then
+        self.nvim.log:error "not initialized. call setup() at first."
+      end
+      f(Args.new(self.nvim, info.args))
+    end
+  end
+
+  self.nvim.api.nvim_create_user_command(
+    "CellWidthsAdd",
+    wrap(function(args)
+      local entry, width = args:as_numbers_or_table()
+      if not entry then
+        self.nvim.log:error "invalid args"
+        return nil
+      end
+      self:add(entry, width)
+      self:apply()
+    end),
+    { nargs = "+" }
+  )
+
+  self.nvim.api.nvim_create_user_command(
+    "CellWidthsDelete",
+    wrap(function(args)
+      local entry = args:as_numbers_or_table()
+      if not entry then
+        self.nvim.log:error "invalid args"
+        return nil
+      end
+      self:delete(entry)
+      self:apply()
+    end),
+    { nargs = "+" }
+  )
+
+  self.nvim.api.nvim_create_user_command(
+    "CellWidthsLoad",
+    wrap(function(args)
+      local name = args:as_string()
+      if not name then
+        self.nvim.log:error "invalid args"
+        return nil
+      end
+      self:load(name)
+    end),
+    { nargs = 1 }
+  )
+
+  self.nvim.api.nvim_create_user_command(
+    "CellWidthsRemove",
+    wrap(function(args)
+      local name = args:as_string()
+      if not name or name == "" then
+        self:remove(self.opts.name)
+      elseif name:match "^user%/" then
+        self:remove(name)
+      else
+        self:remove("user/" .. name)
+      end
+    end),
+    { nargs = "?" }
+  )
 end
 
 return CellWidths

@@ -2,7 +2,7 @@
 
 Yet another `setcellwidths()` wrapper.
 
-English version README is here →[README.en.md][]
+<!-- English version README is here →[README.en.md](/README.en.md) -->
 
 ## これは何？
 
@@ -55,6 +55,8 @@ use {
 
 ## 使い方
 
+### テンプレートを使う
+
 予め定められた値を利用するにはテンプレート名を指定して呼び出して下さい。
 
 ```lua
@@ -86,7 +88,22 @@ require("cellwidths").setup {
 }
 ```
 
-より詳しい使い方は[ヘルプ][doc/cellwidths.jax]を見て下さい。
+### コマンドを使う
+
+Neovim を起動中にオンデマンドで設定を変更することも可能です。
+
+```vim
+" 「℃」を全角で扱います。
+:CellWidthsAdd 0x2103, 2
+" 設定を削除します。
+:CellWidthsDelete 0x2103
+" テンプレートを読み込みます。
+:CellWidthsLoad default
+" （現在利用中の）テンプレートを削除します。
+:CellWidthsRemove
+```
+
+より詳しい使い方は[ヘルプ](/doc/cellwidths.jax)を見て下さい。
 
 ## リンク
 
