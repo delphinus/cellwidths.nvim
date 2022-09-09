@@ -42,12 +42,12 @@ function Template:load()
     self.nvim.log:trace("template %s not found", self.name)
     return nil
   end
-  local cw_table = self:load_file(self.name)
-  if not cw_table then
+  local tbl = self:load_file(self.name)
+  if not tbl then
     self.nvim.log:trace("load template %s failed", self.name)
     return nil
   end
-  return { cw_table = cw_table, clean_up = true, save = false }
+  return { cw_table = tbl.cw_table, clean_up = true, save = false }
 end
 
 ---@return table?
