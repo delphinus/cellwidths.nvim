@@ -1,5 +1,8 @@
 local Log = require "cellwidths.log"
 
+---@class cellwidths.nvim.Api
+---@field nvim_create_user_command fun(name: string, command: (fun(info: table): nil), opts: any?): nil
+
 ---@class Option
 ---@field get fun(self: Option): { [string]: string }
 
@@ -19,6 +22,7 @@ local Log = require "cellwidths.log"
 ---@field fs_write fun(fd: number, data: string): integer|nil
 
 ---@class cellwidths.nvim.Nvim
+---@field api cellwidths.nvim.Api
 ---@field fn cellwidths.nvim.Fn
 ---@field opt cellwidths.nvim.Opt
 ---@field uv cellwidths.nvim.Uv
@@ -28,6 +32,9 @@ local Nvim = {}
 ---@return cellwidths.nvim.Nvim
 Nvim.new = function()
   return {
+    api = {
+      nvim_create_user_command = vim.api.nvim_create_user_command,
+    },
     fn = {
       char2nr = vim.fn.char2nr,
       setcellwidths = vim.fn.setcellwidths,
