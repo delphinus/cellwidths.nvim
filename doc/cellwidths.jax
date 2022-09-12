@@ -159,7 +159,7 @@ FURTHER USECASE				      *cellwidths-usage-further-usecase*
 	    -- プラグイン更新時には一旦削除する。
 	    require("cellwidths").remove
 	    -- ex コマンドも用意しています。
-	    -- vim.cmd[[CellWidthsRemove]]
+	    -- vim.cmd.CellWidthsRemove()
 	  end,
 	}
 
