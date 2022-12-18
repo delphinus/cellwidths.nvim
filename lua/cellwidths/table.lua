@@ -1,4 +1,4 @@
----@alias cellwidths.table.CellWidthEntry integer[]
+---@alias cellwidths.table.CellWidthEntry integer[]|integer
 ---@alias cellwidths.table.CellWidth 1|2
 ---@alias cellwidths.table.CellWidthTable cellwidths.table.CellWidthEntry[]
 ---@alias CharWidthMap table<string, cellwidths.table.CellWidth>
