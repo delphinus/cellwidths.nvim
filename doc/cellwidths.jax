@@ -21,7 +21,7 @@ INTRODUCTION					       *cellwidths-introduction*
 
 これは |setcellwidths()| を簡単に設定するためのプラグインです。一般に、この関数
 は以下のように利用されます。
->
+>lua
 	vim.fn.setcellwidths {
 	  { 0x2103, 0x2103, 2 },
 	  { 0x2160, 0x2169, 2 },
@@ -40,12 +40,12 @@ INTRODUCTION					       *cellwidths-introduction*
 INSTALL							    *cellwidths-install*
 
 |'packpath'| 配下のディレクトリにクローンして下さい。
->
+>bash
 	git clone https://github.com/delphinus/cellwidths.nvim \
 	  ~/.local/share/nvim/site/pack/foo/start/cellwidths.nvim
 
 |init.lua| で |cellwidths-functions-setup| を呼び出すと使えます。
->
+>lua
 	-- 'listchars' と 'fillchars' を事前に設定しておくのがお勧めです。
 	-- vim.opt.listchars = { eol = "⏎" }
 	-- vim.opt.fillchars = { eob = "‣" }
@@ -54,7 +54,7 @@ INSTALL							    *cellwidths-install*
 	}
 
 または、好きなプラグインマネージャーを使って下さい。
->
+>lua
 	-- for lazy.nvim
 	require("lazy").setup {
 	  {
@@ -74,11 +74,11 @@ INSTALL							    *cellwidths-install*
 USAGE							      *cellwidths-usage*
 
 予め定められた値を利用するにはテンプレート名を指定して呼び出して下さい。
->
+>lua
 	require("cellwidths").setup { name = "default" }
 
 オリジナルの設定を作りたい場合は以下のようにして下さい。
->
+>lua
 	require("cellwidths").setup {
 	  name = "user/custom",
 	  ---@param cw cellwidths
@@ -112,7 +112,7 @@ USAGE							      *cellwidths-usage*
 
 設定のテスト中など、Neovim の起動中に設定を変更する場合は |cellwidths-commands|
 を使うと便利です。
->
+>vim
 	" 「℃」を全角で扱います。
 	:CellWidthsAdd 0x2103, 2
 	" 設定を削除します。
@@ -129,7 +129,7 @@ FURTHER USECASE				      *cellwidths-usage-further-usecase*
 速ですが、予め提供されたテンプレートは |'listchars'|, |'fillchars'| の値と被ってい
 ないか毎回検査されるため多少処理が重くなります。何も設定を増減しない場合でも、
 `user/foo` テンプレートとして利用する方が高速になります。
->
+>lua
 	require("cellwidths").setup {
 	  name = "user/default",
 	  ---@param cw cellwidths
@@ -142,7 +142,7 @@ FURTHER USECASE				      *cellwidths-usage-further-usecase*
 ただし、これではプラグインで `"default"` テンプレートが更新された場合に追従出来
 ません。プラグインの更新時には一度 |cellwidths-functions-remove| か、
 |:CellWidthsRemove| で削除した方が良いでしょう。
->
+>lua
 	-- lazy.nvim なら以下のように書けるでしょう。
 	{
 	  "delphinus/cellwidths.nvim",
@@ -177,7 +177,7 @@ DEVELOPING					   *cellwidths-usage-developing*
 記載しています。|LSP| のセットアップを行うことで型などの情報が表示出来ます。
 
 https://github.com/sumneko/lua-language-server
->
+>lua
 	-- cellwidths クラスとして認識されます。
 	local cw = require "cellwidths"
 
@@ -220,7 +220,7 @@ setup()		プラグインを読み込みます。この関数を呼ばない限�
 
 						      *cellwidths-functions-add*
 add()		設定を追加します。
->
+>lua
 		-- 一文字だけ指定します。
 		cw.add(0x2103, 2)
 		-- 文字範囲を指定します。
@@ -231,14 +231,14 @@ add()		設定を追加します。
 						   *cellwidths-functions-delete*
 delete()	指定した設定を削除します。削除すべき値が存在しない場合もエラー
 		になりません。
->
+>lua
 		cw.delete(0x2103)
 		-- 複数指定することも出来ます。
 		cw.delete { 0x2104, 0x2105 }
 <
 						     *cellwidths-functions-load*
 load()		テンプレートを読み込みます。
->
+>lua
 		cw.load "default"
 <
 						   *cellwidths-functions-remove*
@@ -246,7 +246,7 @@ remove()	テンプレートを削除します。`user/` 接頭辞は省いても
 		ます。引数を省略した場合、現在利用中のテンプレートを削除します。
 
 		NOTE: プラグイン規定のテンプレートは削除出来ません。
->
+>lua
 		-- "user/custom" テンプレートを削除します。
 		cw.remove "custom"
 
@@ -260,7 +260,7 @@ COMMANDS						   *cellwidths-commands*
 :CellWidthsAdd {args}		設定を追加します。{args} は Lua の式として評価
 				されますので、|cellwidths-functions-add| と同様
 				のものが指定出来ます。
->
+>vim
 				:CellWidthsAdd 0x2103, 2
 				:CellWidthsAdd { 0x2160, 0x2169, 2 }
 				:CellWidthsAdd { { 0x2170, 0x2179, 2 } }
@@ -269,13 +269,13 @@ COMMANDS						   *cellwidths-commands*
 :CellWidthsDelete {args}	設定を削除します。{args} は Lua の式として評価
 				されますので、|cellwidths-functions-delete| と同
 				様のものが指定出来ます。
->
+>vim
 				:CellWidthsDelete 0x2103
 				:CellWidthsDelete { 0x2104, 0x2105 }
 <
 							       *:CellWidthsLoad*
 :CellWidthsLoad {args}		テンプレートを読み込みます。
->
+>vim
 				:CellWidthsLoad user/custom
 <
 							     *:CellWidthsRemove*
@@ -285,7 +285,7 @@ COMMANDS						   *cellwidths-commands*
 
 				NOTE: プラグイン規定のテンプレートは削除出来ま
 				せん。
->
+>vim
 				" どちらも同じ意味です。
 				:CellWidthsRemove custom
 
