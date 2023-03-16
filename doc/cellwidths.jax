@@ -13,6 +13,7 @@ Usage			|cellwidths-usage|
   Developing		|cellwidths-usage-developing|
 Functions		|cellwidths-functions|
 Commands		|cellwidths-commands|
+Versioning		|cellwidths-versioning|
 Caveats			|cellwidths-caveats|
 References		|cellwidths-references|
 
@@ -291,6 +292,26 @@ COMMANDS						   *cellwidths-commands*
 
 				" 現在利用中のものを削除します。
 				:CellWidthsRemove
+
+==============================================================================
+VERSIONING						 *cellwidths-versioning*
+
+テンプレートのうち、`sfmono_square` については SF Mono Square のバージョンに合わ
+せて内容を変更しています。そのためこのプラグインを利用する際は SF Mono Square
+v2.1.0 以前に関しては `"v1.0.0"` のタグを、それより後は SF Mono Square のバー
+ジョンに合わせたタグを利用してください。
+>lua
+	-- for lazy.nvim
+	{
+	  "delphinus/cellwidths.nvim",
+	  -- SF Mono Square v2.1.0 以前
+	  tag = "v1.0.0",
+	  -- SF Mono Square v2.2.0 以降はそのバージョンを
+	  -- そのまま指定してください
+	  tag = "v2.2.0",
+	}
+
+タグの指定が無い場合、常に最新版が利用されます。
 
 ==============================================================================
 CAVEATS							    *cellwidths-caveats*
