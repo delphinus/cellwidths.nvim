@@ -55,17 +55,19 @@ INSTALL							    *cellwidths-install*
 
 または、好きなプラグインマネージャーを使って下さい。
 >
-	-- for packer.nvim
-	use {
-	  "delphinus/cellwidths.nvim",
-	  config = function()
+	-- for lazy.nvim
+	require("lazy").setup {
+	  {
+	    "delphinus/cellwidths.nvim",
 	    -- 'listchars' と 'fillchars' を事前に設定しておくのがお勧めです。
-	    -- vim.opt.listchars = { eol = "⏎" }
-	    -- vim.opt.fillchars = { eob = "‣" }
-	    require("cellwidths").setup {
+	    -- init = function()
+	    --   vim.opt.listchars = { eol = "⏎" }
+	    --   vim.opt.fillchars = { eob = "‣" }
+	    -- end,
+	    opts = {
 	      name = "default",
-	    }
-	  end,
+	    },
+	  },
 	}
 
 ==============================================================================
@@ -141,26 +143,20 @@ FURTHER USECASE				      *cellwidths-usage-further-usecase*
 ません。プラグインの更新時には一度 |cellwidths-functions-remove| か、
 |:CellWidthsRemove| で削除した方が良いでしょう。
 >
-	-- packer.nvim なら以下のように書けるでしょう。
-	use {
+	-- lazy.nvim なら以下のように書けるでしょう。
+	{
 	  "delphinus/cellwidths.nvim",
-	  config = function()
-	    require("cellwidths").setup {
-	      name = "user/default"
-	      ---@param cw cellwidths
-	      fallback = function(cw)
-	        cw.load "default"
-	        -- 何らかのカスタマイズを行う。
-	        cw.add ...
-	      end,
-	    }
-	  end,
-	  run = function()
-	    -- プラグイン更新時には一旦削除する。
-	    require("cellwidths").remove
-	    -- ex コマンドも用意しています。
-	    -- vim.cmd.CellWidthsRemove()
-	  end,
+	  opts = {
+	    name = "user/default",
+	    ---@param cw cellwidths
+	    fallback = function(cw)
+	      cw.load "default"
+	      -- 何らかのカスタマイズを行う。
+	      cw.add ...
+	    end,
+	  }
+	  -- プラグイン更新時には一旦削除する。
+	  build = ":CellWidthsRemove",
 	}
 
 ------------------------------------------------------------------------------
