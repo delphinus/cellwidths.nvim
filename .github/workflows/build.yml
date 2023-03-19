@@ -1,0 +1,37 @@
+name: CI
+
+on: pull_request
+
+jobs:
+  build:
+    name: check diff for templates and commit if needed
+    runs-on: ubuntu-latest
+    steps:
+      - uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: nightly
+      - uses: actions/checkout@v3
+      - name: generate templates
+        run: |
+          set -eux
+          scripts=lua/cellwidths/scripts
+          for i in $(ls $scripts); do
+            name=${i%.lua}
+            if [[ $name != generator ]]; then
+              nvim -l $scripts/generator.lua $name
+            fi
+          done
+          export dir=lua/cellwidths/templates
+          if git status -sb | grep -q $dir; then
+            diff=$(git status -sb | grep $dir | cut -b4- | perl -pe 's,$ENV{dir}/,,; s/\.lua$//')
+            # ref https://qiita.com/thaim/items/3d1a4d09ec4a7d8844ce
+            git config user.name github-actions[bot]
+            git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+            git fetch --unshallow origin
+            for name in $diff; do
+              git add $dir/$name.lua
+              git commit -m "feat!: change templates for $name"
+            done
+            git push origin HEAD:$GITHUB_HEAD_REF
+          fi
