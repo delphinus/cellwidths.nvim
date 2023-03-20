@@ -1,9 +1,4 @@
-local Nvim = require "cellwidths.nvim"
-local Table = require "cellwidths.table"
-local Template = require "cellwidths.template"
-
-local nvim = Nvim.new()
-local tbl = Table.new(nvim, {
+return {
   { 0x2030, 0x203f, 2 },
   { 0x2103, 0x2103, 2 },
   { 0x2160, 0x2169, 2 },
@@ -101,7 +96,4 @@ local tbl = Table.new(nvim, {
   { 0xfe0b0, 0xfe0b5, 2 },
   { 0xfe566, 0xfe568, 2 },
   { 0xff500, 0xffd46, 2 },
-})
-
-local tmpl = Template.new(nvim, "cica")
-tmpl:save(tbl:get())
+}

@@ -1,9 +1,4 @@
-local Nvim = require "cellwidths.nvim"
-local Table = require "cellwidths.table"
-local Template = require "cellwidths.template"
-
-local nvim = Nvim.new()
-local tbl = Table.new(nvim, {
+return {
   { 0x2103, 0x2103, 2 }, -- ℃
   { 0x2121, 0x2121, 2 }, -- ℡
   { 0x212b, 0x212b, 2 }, -- Å
@@ -81,7 +76,4 @@ local tbl = Table.new(nvim, {
   { 0xfea60, 0xfebeb, 2 }, -- 󾩠..󾯫 -- Codicons
 
   { 0xf0000, 0xf0000, 2 }, -- 󰀀
-})
-
-local tmpl = Template.new(nvim, "sfmono_square")
-tmpl:save(tbl:get())
+}
