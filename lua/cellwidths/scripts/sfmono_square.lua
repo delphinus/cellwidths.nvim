@@ -59,34 +59,47 @@ return {
   { 0xe000, 0xe008, 2 }, --  . -- pomicons
   { 0xe0a0, 0xe0a3, 1 }, -- .. -- Powerline Symbols
   { 0xe0b0, 0xe0b3, 1 }, -- .. -- Powerline Symbols
-  { 0xe0b8, 0xe0d4, 2 }, -- .. -- Powerline Extra Symbols
+  { 0xe0b8, 0xe0b8, 1 }, --  -- Powerline Extra Symbols
+  { 0xe0b9, 0xe0bf, 2 }, -- .. -- Powerline Extra Symbols
+  { 0xe0c0, 0xe0c1, 1 }, -- .. -- Powerline Extra Symbols
+  { 0xe0c2, 0xe0cd, 2 }, -- .. -- Powerline Extra Symbols
+  { 0xe0ce, 0xe0d1, 1 }, -- .. -- Powerline Extra Symbols
+  { 0xe0d2, 0xe0d4, 2 }, -- .. -- Powerline Extra Symbols
   { 0xe200, 0xe2a9, 2 }, -- .. -- Font Awesome Extension
   { 0xf000, 0xf2e0, 2 }, -- .. -- Font Awesome
   --{ 0x23fb, 0x23fe, 2 }, -- ⏻ .. ⏾- Power Symbols
   { 0x2b58, 0x2b58, 2 }, -- ⭘  --- Power Symbols
-  { 0xf500, 0xf6d4, 2 }, -- .. -- Material
-  { 0xf6d9, 0xf8fe, 2 }, -- .. -- Material
-  { 0xe800, 0xec46, 2 }, -- .. -- Material
-  { 0xff6d5, 0xff6d8, 2 }, -- 󿛕..󿛘 -- Material
-  { 0xff8ff, 0xff8ff, 2 }, -- 󿣿 -- Material
   { 0xe300, 0xe338, 2 }, -- .. -- Weather Icons
+  { 0xe339, 0xe339, 1 }, --  -- Weather Icons
   { 0xe33a, 0xe33d, 2 }, -- .. -- Weather Icons
+  { 0xe33e, 0xe341, 1 }, -- .. -- Weather Icons
   { 0xe342, 0xe343, 2 }, -- .. -- Weather Icons
+  { 0xe344, 0xe345, 1 }, -- .. -- Weather Icons
   { 0xe346, 0xe346, 2 }, --  -- Weather Icons
+  { 0xe347, 0xe34a, 1 }, -- .. -- Weather Icons
   { 0xe34b, 0xe34d, 2 }, -- .. -- Weather Icons
+  { 0xe34e, 0xe350, 1 }, -- .. -- Weather Icons
   { 0xe351, 0xe351, 2 }, --  -- Weather Icons
+  { 0xe352, 0xe353, 1 }, -- .. -- Weather Icons
   { 0xe354, 0xe368, 2 }, -- .. -- Weather Icons
+  { 0xe369, 0xe369, 1 }, --  -- Weather Icons
   { 0xe36a, 0xe36b, 2 }, -- .. -- Weather Icons
+  { 0xe36c, 0xe36c, 1 }, --  -- Weather Icons
   { 0xe36d, 0xe37e, 2 }, -- .. -- Weather Icons
+  { 0xe37f, 0xe380, 1 }, -- .. -- Weather Icons
   { 0xe381, 0xe3c3, 2 }, -- .. -- Weather Icons
+  { 0xe3c4, 0xe3c7, 1 }, -- .. -- Weather Icons
   { 0xe3c8, 0xe3e3, 2 }, -- .. -- Weather Icons
-  { 0xe5fa, 0xe62e, 2 }, -- .. -- Seti-UI + Custom
-  { 0xe700, 0xe7c5, 2 }, -- .. -- Seti-UI + Custom
-  { 0xf300, 0xf31c, 2 }, -- .. -- Font Logos
-  { 0xf400, 0xf4a9, 2 }, -- .. -- Octicons
+  { 0xe5fa, 0xe6ac, 2 }, -- .. -- Seti-UI + Custom
+  { 0xe700, 0xe7c5, 2 }, -- .. -- Devicons
+  { 0xea60, 0xebeb, 2 }, -- .. -- Codicons
+  { 0xf300, 0xf32f, 2 }, -- .. -- Font Logos
+  { 0xf400, 0xf532, 2 }, -- .. -- Octicons
   { 0x2665, 0x2665, 2 }, -- ♥ -- Octicons
   { 0x26a1, 0x26a1, 2 }, -- ⚡ -- Octicons
-  { 0xfea60, 0xfebeb, 2 }, -- 󾩠..󾯫 -- Codicons
+  { 0xf0001, 0xf1af0, 2 }, -- 󰀁..󱫰 -- Material
 
+  { 0xf6d5, 0xf6d8, 1 }, -- ..
+  { 0xf8ff, 0xf8ff, 1 }, -- 
   { 0xf0000, 0xf0000, 2 }, -- 󰀀
 }
