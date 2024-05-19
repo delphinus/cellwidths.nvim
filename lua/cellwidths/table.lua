@@ -25,12 +25,14 @@ function Table:set(cw_table)
   self.cw_table = cw_table
 end
 
+local islist = vim.islist or vim.tbl_islist
+
 ---@return nil
 function Table:clean_up()
   ---@param cw_table any
   ---@return boolean
   local function is_valid_table(cw_table)
-    if type(cw_table) ~= "table" or not vim.tbl_islist(cw_table) then
+    if type(cw_table) ~= "table" or not islist(cw_table) then
       return false
     end
     for _, entry in ipairs(cw_table) do
