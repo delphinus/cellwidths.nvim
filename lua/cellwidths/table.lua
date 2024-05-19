@@ -25,7 +25,7 @@ function Table:set(cw_table)
   self.cw_table = cw_table
 end
 
-local islist = vim.fn.has("nvim-0.10") == 1 and vim.islist or vim.tbl_islist
+local islist = vim.islist or vim.tbl_islist
 
 ---@return nil
 function Table:clean_up()
