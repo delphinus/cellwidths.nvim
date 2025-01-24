@@ -27,10 +27,10 @@ return {
   { 0x23cf, 0x23cf, 2 }, -- ⏏
   { 0x2469, 0x24e9, 2 }, -- ⑩..ⓩ
   { 0x24eb, 0x24fe, 2 }, -- ⓫..⓾
-  { 0x25b3, 0x25b3, 2 }, -- △
-  { 0x25b7, 0x25b7, 2 }, -- ▷
-  { 0x25bd, 0x25bd, 2 }, -- ▽
-  { 0x25c1, 0x25c1, 2 }, -- ◁
+  { 0x25b3, 0x25b3, 1 }, -- △
+  { 0x25b7, 0x25b7, 1 }, -- ▷
+  { 0x25bd, 0x25bd, 1 }, -- ▽
+  { 0x25c1, 0x25c1, 1 }, -- ◁
   { 0x25c6, 0x25c7, 2 }, -- ◆..◇
   { 0x25d9, 0x25d9, 2 }, -- ◙
   { 0x2600, 0x260e, 2 }, -- ☀..☎
@@ -64,11 +64,10 @@ return {
   { 0xe0b9, 0xe0bf, 2 }, -- .. -- Powerline Extra Symbols
   { 0xe0c0, 0xe0c1, 1 }, -- .. -- Powerline Extra Symbols
   { 0xe0c2, 0xe0cd, 2 }, -- .. -- Powerline Extra Symbols
-  { 0xe0ce, 0xe0d1, 1 }, -- .. -- Powerline Extra Symbols
-  { 0xe0d2, 0xe0d4, 2 }, -- .. -- Powerline Extra Symbols
+  { 0xe0ce, 0xe0d1, 2 }, -- .. -- Powerline Extra Symbols
+  { 0xe0d2, 0xe0d7, 1 }, -- .. -- Powerline Extra Symbols
   { 0xe200, 0xe2a9, 2 }, -- .. -- Font Awesome Extension
-  { 0xf000, 0xf2e0, 2 }, -- .. -- Font Awesome
-  --{ 0x23fb, 0x23fe, 2 }, -- ⏻ .. ⏾- Power Symbols
+  { 0xed00, 0xf2ff, 2 }, -- .. -- Font Awesome
   { 0x2b58, 0x2b58, 2 }, -- ⭘  --- Power Symbols
   { 0xe300, 0xe338, 2 }, -- .. -- Weather Icons
   { 0xe339, 0xe339, 1 }, --  -- Weather Icons
@@ -91,11 +90,11 @@ return {
   { 0xe381, 0xe3c3, 2 }, -- .. -- Weather Icons
   { 0xe3c4, 0xe3c7, 1 }, -- .. -- Weather Icons
   { 0xe3c8, 0xe3e3, 2 }, -- .. -- Weather Icons
-  { 0xe5fa, 0xe6ac, 2 }, -- .. -- Seti-UI + Custom
-  { 0xe700, 0xe7c5, 2 }, -- .. -- Devicons
+  { 0xe5fa, 0xe6b8, 2 }, -- .. -- Seti-UI + Custom
+  { 0xe700, 0xe8ef, 2 }, -- .. -- Devicons
   { 0xea60, 0xebeb, 2 }, -- .. -- Codicons
-  { 0xf300, 0xf32f, 2 }, -- .. -- Font Logos
-  { 0xf400, 0xf532, 2 }, -- .. -- Octicons
+  { 0xf300, 0xf381, 2 }, -- .. -- Font Logos
+  { 0xf400, 0xf533, 2 }, -- .. -- Octicons
   { 0x2665, 0x2665, 2 }, -- ♥ -- Octicons
   { 0x26a1, 0x26a1, 2 }, -- ⚡ -- Octicons
   { 0xf0001, 0xf1af0, 2 }, -- 󰀁..󱫰 -- Material
@@ -103,10 +102,4 @@ return {
   { 0xf6d5, 0xf6d8, 1 }, -- ..
   { 0xf8ff, 0xf8ff, 1 }, -- 
   { 0xf0000, 0xf0000, 2 }, -- 󰀀
-
-  -- for v3.2.0 above
-  { 0x2630, 0x2630, 1 }, -- ☰
-  { 0xe6ad, 0xe6b2, 2 }, -- ..
-  { 0xf330, 0xf372, 2 }, -- ..
-  { 0xf533, 0xf533, 2 }, -- 
 }
