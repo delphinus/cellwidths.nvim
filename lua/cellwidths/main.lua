@@ -40,28 +40,42 @@ function CellWidths:setup(opts)
 
   ---@diagnostic disable-next-line: assign-type-mismatch
   self.opts = vim.tbl_extend("force", self.default_options, opts or {})
-  vim.validate {
-    name = { self.opts.name, "string" },
-    fallback = {
-      self.opts.fallback,
-      ---@return boolean
-      function(v)
-        if is_user_template then
-          return type(v) == "function"
-        end
-        return true
-      end,
-      'function necessary when name =~ "^user%/"',
-    },
-    log_level = {
-      self.opts.log_level,
-      ---@return boolean
-      function(v)
-        return not not vim.log.levels[v]
-      end,
-      "log level name. ex. ERROR, WARN, ……",
-    },
-  }
+
+  if vim.fn.has "nvim-0.11" == 1 then
+    vim.validate("name", self.opts.name, "string")
+    vim.validate("fallback", self.opts.fallback, function(v)
+      if is_user_template then
+        return type(v) == "function"
+      end
+      return true
+    end, 'function necessary when name =~ "^user%/"')
+    vim.validate("log_level", self.opts.log_level, function(v)
+      return not not vim.log.levels[v]
+    end, "log level name. ex. ERROR, WARN, ……")
+  else
+    vim.validate {
+      name = { self.opts.name, "string" },
+      fallback = {
+        self.opts.fallback,
+        ---@return boolean
+        function(v)
+          if is_user_template then
+            return type(v) == "function"
+          end
+          return true
+        end,
+        'function necessary when name =~ "^user%/"',
+      },
+      log_level = {
+        self.opts.log_level,
+        ---@return boolean
+        function(v)
+          return not not vim.log.levels[v]
+        end,
+        "log level name. ex. ERROR, WARN, ……",
+      },
+    }
+  end
 
   self.nvim.log.level = vim.log.levels[self.opts.log_level]
   local tmpl
