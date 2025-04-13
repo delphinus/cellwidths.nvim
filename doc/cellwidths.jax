@@ -211,7 +211,9 @@ setup()		プラグインを読み込みます。この関数を呼ばない限�
 					  *cellwidths-functions-setup-log_level*
 		log_level	(default: `"INFO"`)
 				プラグインが表示する通知の最低レベルを指定しま
-				す。指定出来る値は |log_levels| を参照して下さい。
+				す。指定出来る値は |log_levels| に準じます。
+				`vim.log.levels.INFO` のように直接指定するか、
+				`"INFO"` のような文字列を指定してください。
 
 					   *cellwidths-functions-setup-fallback*
 		fallback	(default: `nil`)

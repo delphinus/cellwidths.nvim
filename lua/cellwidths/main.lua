@@ -1,7 +1,7 @@
 ---@class cellwidths.main.Options
 ---@field name string
 ---@field fallback fun(self: cellwidths): cellwidths
----@field log_level string
+---@field log_level string|integer
 ---@field initialized boolean
 
 local Args = require "cellwidths.args"
@@ -50,8 +50,13 @@ function CellWidths:setup(opts)
       return true
     end, 'function necessary when name =~ "^user%/"')
     vim.validate("log_level", self.opts.log_level, function(v)
-      return not not vim.log.levels[v]
-    end, "log level name. ex. ERROR, WARN, ……")
+      if type(v) == "string" then
+        return not not vim.log.levels[v]
+      elseif type(v) == "number" then
+        return v >= vim.log.levels.TRACE and v <= vim.log.levels.OFF
+      end
+      return false
+    end, "vim.log.levels' value or log level name. ex. ERROR, WARN, ……")
   else
     vim.validate {
       name = { self.opts.name, "string" },
@@ -70,9 +75,14 @@ function CellWidths:setup(opts)
         self.opts.log_level,
         ---@return boolean
         function(v)
-          return not not vim.log.levels[v]
+          if type(v) == "string" then
+            return not not vim.log.levels[v]
+          elseif type(v) == "number" then
+            return v >= vim.log.levels.TRACE and v <= vim.log.levels.OFF
+          end
+          return false
         end,
-        "log level name. ex. ERROR, WARN, ……",
+        "vim.log.levels' value or log level name. ex. ERROR, WARN, ……",
       },
     }
   end
