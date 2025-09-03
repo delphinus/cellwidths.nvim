@@ -140,7 +140,7 @@ function CellWidths:load_template(tmpl)
     self.table:clean_up()
   end
   self.nvim.log:trace(self.table:get())
-  self.nvim.fn.setcellwidths(self.table:get())
+  self:apply()
   if result.save then
     local err = tmpl:save(self.table:get())
     if err then
