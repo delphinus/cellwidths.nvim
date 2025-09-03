@@ -9,12 +9,12 @@
 local Template = require "cellwidths.template"
 
 ---@class cellwidths.user_template.UserTemplate: cellwidths.template.Template
----@field fallback fun(): cellwidths.table.CellWidthTable
+---@field fallback fun(): cellwidths.table.CellWidthTable?
 local UserTemplate = setmetatable({}, { __index = Template })
 
 ---@param nvim cellwidths.nvim.Nvim
 ---@param name string
----@param fallback fun(): cellwidths.table.CellWidthTable
+---@param fallback fun(): cellwidths.table.CellWidthTable?
 ---@return cellwidths.user_template.UserTemplate
 UserTemplate.new = function(nvim, name, fallback)
   return setmetatable({ nvim = nvim, name = name, fallback = fallback }, { __index = UserTemplate })
@@ -43,7 +43,7 @@ function UserTemplate:load()
 
   local tbl = load_template()
   return tbl and { cw_table = tbl.cw_table, clean_up = false, save = false }
-      or { cw_table = self.fallback(), clean_up = true, save = true }
+    or { cw_table = self.fallback() or {}, clean_up = true, save = true }
 end
 
 ---@param opts Opts?
