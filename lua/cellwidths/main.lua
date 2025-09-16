@@ -9,9 +9,12 @@ local Table = require "cellwidths.table"
 local Template = require "cellwidths.template"
 local UserTemplate = require "cellwidths.user_template"
 
+local EMPTY = "empty"
+
 -- The main class
 ---@class cellwidths.main.CellWidths
 ---@field nvim cellwidths.nvim.Nvim
+---@field current_template string
 ---@field default_options cellwidths.main.Options
 ---@field opts cellwidths.main.Options
 ---@field table cellwidths.table.Table
@@ -24,6 +27,7 @@ CellWidths.new = function(nvim)
   return setmetatable({
     default_options = { name = "default", log_level = "INFO" },
     nvim = nvim,
+    current_template = EMPTY,
     opts = {},
     table = Table.new(nvim),
     initialized = false,
@@ -92,7 +96,7 @@ function CellWidths:setup(opts)
   if is_user_template then
     ---@return cellwidths.table.CellWidthTable
     local function fallback()
-      self:load "empty"
+      self:load(EMPTY)
       local cw = require "cellwidths"
       self.opts.fallback(cw)
       return self.table:get()
@@ -140,7 +144,7 @@ function CellWidths:load_template(tmpl)
     self.table:clean_up()
   end
   self.nvim.log:trace(self.table:get())
-  self.nvim.fn.setcellwidths(self.table:get())
+  self:apply()
   if result.save then
     local err = tmpl:save(self.table:get())
     if err then
@@ -148,6 +152,7 @@ function CellWidths:load_template(tmpl)
       return
     end
   end
+  self.current_template = tmpl.name
   self.nvim.log:debug("successfully loaded the table from %s", tmpl.name)
 end
 
@@ -183,6 +188,34 @@ end
 ---@return nil
 function CellWidths:apply()
   self.nvim.fn.setcellwidths(self.table:get())
+end
+
+---@return nil
+function CellWidths:on()
+  if self.current_template == EMPTY then
+    self.nvim.log:error "cannot enable when the current template is 'empty'"
+    return
+  end
+  self:load(self.current_template)
+end
+
+---@return nil
+function CellWidths:off()
+  if self.current_template == EMPTY then
+    self.nvim.log:debug "no need to disable because the current template is 'empty'"
+    return
+  end
+  self.table:set {}
+  self:apply()
+end
+
+---@return nil
+function CellWidths:toggle()
+  if #self.table:get() == 0 then
+    self:on()
+  else
+    self:off()
+  end
 end
 
 ---@return nil
@@ -253,6 +286,30 @@ function CellWidths:setup_commands()
       end
     end),
     { nargs = "?" }
+  )
+
+  self.nvim.api.nvim_create_user_command(
+    "CellWidthsOn",
+    wrap(function(_)
+      self:on()
+    end),
+    {}
+  )
+
+  self.nvim.api.nvim_create_user_command(
+    "CellWidthsOff",
+    wrap(function(_)
+      self:off()
+    end),
+    {}
+  )
+
+  self.nvim.api.nvim_create_user_command(
+    "CellWidthsToggle",
+    wrap(function(_)
+      self:toggle()
+    end),
+    {}
   )
 end
 

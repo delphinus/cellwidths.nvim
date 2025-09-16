@@ -96,8 +96,8 @@ USAGE							      *cellwidths-usage*
 	      { 0x2190, 0x2193, 2 },
 	    }
 
-	    -- 削除も出来ます。設定に存在しないコードポイントを指定してもエラー
-	    -- になりません。
+	    -- 削除も出来ます。設定に存在しないコードポイントを指定してもエ
+	    -- ラーになりません。
 	    cw.delete(0x2103)
 	    cw.delete { 0x2104, 0x2105, 0x2106 }
 	  end,
@@ -122,6 +122,12 @@ USAGE							      *cellwidths-usage*
 	:CellWidthsLoad default
 	" （現在利用中の）テンプレートを削除します。
 	:CellWidthsRemove
+	" 設定を一時的に無効にします。
+	:CellWidthsOff
+	" 設定を一時的に有効にします。
+	:CellWidthsOn
+	" 設定を一時的に切り替えます。
+	:CellWidthsToggle
 
 ------------------------------------------------------------------------------
 FURTHER USECASE				      *cellwidths-usage-further-usecase*
@@ -244,9 +250,16 @@ load()		テンプレートを読み込みます。
 >lua
 		cw.load "default"
 <
+						      *cellwidths-functions-off*
+off()		一時的に設定を無効にします。
+
+						       *cellwidths-functions-on*
+on()		一時的に設定を有効にします。
+
 						   *cellwidths-functions-remove*
-remove()	テンプレートを削除します。`user/` 接頭辞は省いても自動的に補われ
-		ます。引数を省略した場合、現在利用中のテンプレートを削除します。
+remove()	テンプレートを削除します。`user/` 接頭辞は省いても自動的に補わ
+		れます。引数を省略した場合、現在利用中のテンプレートを削除しま
+		す。
 
 		NOTE: プラグイン規定のテンプレートは削除出来ません。
 >lua
@@ -256,13 +269,16 @@ remove()	テンプレートを削除します。`user/` 接頭辞は省いても
 		-- 現在利用中のテンプレートを削除します。
 		cw.remove()
 <
+						   *cellwidths-functions-toggle*
+toggle()	設定が無効な場合は有効にし、有効な場合は無効にします。
+
 ==============================================================================
 COMMANDS						   *cellwidths-commands*
 
 								*:CellWidthsAdd*
 :CellWidthsAdd {args}		設定を追加します。{args} は Lua の式として評価
-				されますので、|cellwidths-functions-add| と同様
-				のものが指定出来ます。
+				されますので、|cellwidths-functions-add| と同
+				様のものが指定出来ます。
 >vim
 				:CellWidthsAdd 0x2103, 2
 				:CellWidthsAdd { 0x2160, 0x2169, 2 }
@@ -270,8 +286,8 @@ COMMANDS						   *cellwidths-commands*
 <
 							     *:CellWidthsDelete*
 :CellWidthsDelete {args}	設定を削除します。{args} は Lua の式として評価
-				されますので、|cellwidths-functions-delete| と同
-				様のものが指定出来ます。
+				されますので、 |cellwidths-functions-delete| と
+				同様のものが指定出来ます。
 >vim
 				:CellWidthsDelete 0x2103
 				:CellWidthsDelete { 0x2104, 0x2105 }
@@ -281,10 +297,16 @@ COMMANDS						   *cellwidths-commands*
 >vim
 				:CellWidthsLoad user/custom
 <
+								*:CellWidthsOff*
+:CellWidthsOff			一時的に設定を無効にします。
+
+								 *:CellWidthsOn*
+:CellWidthsOn			一時的に設定を有効にします。
+
 							     *:CellWidthsRemove*
-:CellWidthsRemove {args}	テンプレートを削除します。`user/` 接頭辞は省いて
-				も自動的に補われます。引数を省略した場合、現在
-				利用中のテンプレートが削除されます。
+:CellWidthsRemove {args}	テンプレートを削除します。 `user/` 接頭辞は省い
+				ても自動的に補われます。引数を省略した場合、現
+				在利用中のテンプレートが削除されます。
 
 				NOTE: プラグイン規定のテンプレートは削除出来ま
 				せん。
@@ -294,14 +316,18 @@ COMMANDS						   *cellwidths-commands*
 
 				" 現在利用中のものを削除します。
 				:CellWidthsRemove
+<
+							     *:CellWidthsToggle*
+:CellWidthsToggle		設定が無効な場合は有効にし、有効な場合は無効に
+				します。
 
 ==============================================================================
 VERSIONING						 *cellwidths-versioning*
 
-テンプレートのうち、`sfmono_square` については SF Mono Square のバージョンに合わ
-せて内容を変更しています。そのためこのプラグインを利用する際は SF Mono Square
-v2.1.0 以前に関しては `"v1.0.0"` のタグを、それより後は SF Mono Square のバー
-ジョンに合わせたタグを利用してください。
+テンプレートのうち、 `sfmono_square` については SF Mono Square のバージョンに合
+わせて内容を変更しています。そのためこのプラグインを利用する際は SF Mono
+Square v2.1.0 以前に関しては `"v1.0.0"` のタグを、それより後は SF Mono Square の
+バージョンに合わせたタグを利用してください。
 >lua
 	-- for lazy.nvim
 	{
