@@ -191,6 +191,25 @@ function CellWidths:apply()
 end
 
 ---@return nil
+function CellWidths:on()
+  if self.current_template == EMPTY then
+    self.nvim.log:error "cannot enable when the current template is 'empty'"
+    return
+  end
+  self:load(self.current_template)
+end
+
+---@return nil
+function CellWidths:off()
+  if self.current_template == EMPTY then
+    self.nvim.log:debug "no need to disable because the current template is 'empty'"
+    return
+  end
+  self.table:set {}
+  self:apply()
+end
+
+---@return nil
 function CellWidths:setup_commands()
   ---@param f fun(args: cellwidths.args.Args): nil
   ---@return fun(info: table): nil
@@ -263,11 +282,7 @@ function CellWidths:setup_commands()
   self.nvim.api.nvim_create_user_command(
     "CellWidthsOn",
     wrap(function(_)
-      if self.current_template == EMPTY then
-        self.nvim.log:error "cannot enable when the current template is 'empty'"
-        return
-      end
-      self:load(self.current_template)
+      self:on()
     end),
     {}
   )
@@ -275,12 +290,7 @@ function CellWidths:setup_commands()
   self.nvim.api.nvim_create_user_command(
     "CellWidthsOff",
     wrap(function(_)
-      if self.current_template == EMPTY then
-        self.nvim.log:error "cannot enable when the current template is 'empty'"
-        return
-      end
-      self.table:set {}
-      self:apply()
+      self:off()
     end),
     {}
   )

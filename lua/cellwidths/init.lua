@@ -3,6 +3,8 @@
 ---@field add fun(entry: cellwidths.table.CellWidthEntry, width: cellwidths.table.CellWidth?): cellwidths
 ---@field delete fun(entry: integer[]|integer): cellwidths
 ---@field load fun(name: string): cellwidths
+---@field off fun(): cellwidths
+---@field on fun(): cellwidths
 ---@field remove fun(name: string): cellwidths
 ---@field setup fun(opts: cellwidths.main.Options?): cellwidths
 
@@ -11,6 +13,8 @@ return setmetatable({
     add = true,
     delete = true,
     load = true,
+    off = true,
+    on = true,
     remove = true,
     setup = true,
   },
