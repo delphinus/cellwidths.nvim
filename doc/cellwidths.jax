@@ -122,6 +122,12 @@ USAGE							      *cellwidths-usage*
 	:CellWidthsLoad default
 	" （現在利用中の）テンプレートを削除します。
 	:CellWidthsRemove
+	" 設定を一時的に無効にします。
+	:CellWidthsOff
+	" 設定を一時的に有効にします。
+	:CellWidthsOn
+	" 設定を一時的に切り替えます。
+	:CellWidthsToggle
 
 ------------------------------------------------------------------------------
 FURTHER USECASE				      *cellwidths-usage-further-usecase*
@@ -244,6 +250,12 @@ load()		テンプレートを読み込みます。
 >lua
 		cw.load "default"
 <
+						      *cellwidths-functions-off*
+off()		一時的に設定を無効にします。
+
+						       *cellwidths-functions-on*
+on()		一時的に設定を有効にします。
+
 						   *cellwidths-functions-remove*
 remove()	テンプレートを削除します。`user/` 接頭辞は省いても自動的に補わ
 		れます。引数を省略した場合、現在利用中のテンプレートを削除しま
@@ -257,6 +269,9 @@ remove()	テンプレートを削除します。`user/` 接頭辞は省いても
 		-- 現在利用中のテンプレートを削除します。
 		cw.remove()
 <
+						   *cellwidths-functions-toggle*
+toggle()	設定が無効な場合は有効にし、有効な場合は無効にします。
+
 ==============================================================================
 COMMANDS						   *cellwidths-commands*
 
@@ -282,6 +297,12 @@ COMMANDS						   *cellwidths-commands*
 >vim
 				:CellWidthsLoad user/custom
 <
+								*:CellWidthsOff*
+:CellWidthsOff			一時的に設定を無効にします。
+
+								 *:CellWidthsOn*
+:CellWidthsOn			一時的に設定を有効にします。
+
 							     *:CellWidthsRemove*
 :CellWidthsRemove {args}	テンプレートを削除します。 `user/` 接頭辞は省い
 				ても自動的に補われます。引数を省略した場合、現
@@ -295,6 +316,10 @@ COMMANDS						   *cellwidths-commands*
 
 				" 現在利用中のものを削除します。
 				:CellWidthsRemove
+<
+							     *:CellWidthsToggle*
+:CellWidthsToggle		設定が無効な場合は有効にし、有効な場合は無効に
+				します。
 
 ==============================================================================
 VERSIONING						 *cellwidths-versioning*
