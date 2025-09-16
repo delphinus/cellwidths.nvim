@@ -7,6 +7,7 @@
 ---@field on fun(): cellwidths
 ---@field remove fun(name: string): cellwidths
 ---@field setup fun(opts: cellwidths.main.Options?): cellwidths
+---@field toggle fun(): cellwidths
 
 return setmetatable({
   _exports = {
@@ -17,6 +18,7 @@ return setmetatable({
     on = true,
     remove = true,
     setup = true,
+    toggle = true,
   },
   _cache = {},
 }, {

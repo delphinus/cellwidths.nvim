@@ -210,6 +210,15 @@ function CellWidths:off()
 end
 
 ---@return nil
+function CellWidths:toggle()
+  if #self.table:get() == 0 then
+    self:on()
+  else
+    self:off()
+  end
+end
+
+---@return nil
 function CellWidths:setup_commands()
   ---@param f fun(args: cellwidths.args.Args): nil
   ---@return fun(info: table): nil
@@ -291,6 +300,14 @@ function CellWidths:setup_commands()
     "CellWidthsOff",
     wrap(function(_)
       self:off()
+    end),
+    {}
+  )
+
+  self.nvim.api.nvim_create_user_command(
+    "CellWidthsToggle",
+    wrap(function(_)
+      self:toggle()
     end),
     {}
   )
