@@ -28,7 +28,7 @@ function UserTemplate:load()
       self.nvim.log:trace("%s does not exist", self.name)
       return nil
     end
-    local tbl = self:load_file(self.name:gsub("%/", ".", 1))
+    local tbl = self:load_file((self.name:gsub("%/", ".", 1)))
     if not tbl then
       self.nvim.log:trace "load_file failed"
       return nil
@@ -56,12 +56,9 @@ function UserTemplate:has_diff(opts)
     if type(orig) ~= "table" or type(new) ~= "table" then
       return false
     end
-    for k, v in pairs(orig) do
-      if v ~= new[k] then
-        return true
-      end
-    end
-    return false
+    -- Compare both ways round: an entry added to 'listchars' since the
+    -- template was saved has to invalidate it as well.
+    return not vim.deep_equal(orig, new)
   end
 
   local old_opts = opts or {}
