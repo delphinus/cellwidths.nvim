@@ -23,10 +23,14 @@ function Log:message(fmt, ...)
     return type(v) == "string" and v or vim.inspect(v)
   end
 
-  local args = { ... }
   local msg = "[" .. self.name .. "] " .. dump(fmt)
-  for _, arg in ipairs(args) do
-    msg = msg:gsub("%%s", dump(arg), 1)
+  -- Count with select() rather than ipairs(): a trailing nil argument would
+  -- otherwise be skipped and leave a bare `%s` in the message.
+  for i = 1, select("#", ...) do
+    local arg = select(i, ...)
+    -- `%` is special in a gsub replacement, so it has to be escaped or the
+    -- call raises "invalid use of '%' in replacement string".
+    msg = msg:gsub("%%s", (dump(arg):gsub("%%", "%%%%")), 1)
   end
   return msg
 end
