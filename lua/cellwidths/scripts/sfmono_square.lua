@@ -34,7 +34,7 @@ return {
   { 0x25c6, 0x25c7, 2 }, -- ◆..◇
   { 0x25d9, 0x25d9, 2 }, -- ◙
   { 0x2600, 0x260e, 2 }, -- ☀..☎
-  { 0x2640, 0x2665, 2 }, -- ♀..♥
+  { 0x2640, 0x2664, 2 }, -- ♀..♤
   { 0x2667, 0x2668, 2 }, -- ♧..♨
   { 0x266a, 0x266a, 2 }, -- ♪
   { 0x266d, 0x266d, 2 }, -- ♭
@@ -57,49 +57,43 @@ return {
   { 0x25C9, 0x25C9, 1 }, -- ◉
   { 0x25CE, 0x25CE, 1 }, -- ◎
 
-  { 0xe000, 0xe008, 2 }, --  . -- pomicons
-  { 0xe0a0, 0xe0a3, 1 }, -- .. -- Powerline Symbols
-  { 0xe0b0, 0xe0b3, 1 }, -- .. -- Powerline Symbols
-  { 0xe0b8, 0xe0b8, 1 }, --  -- Powerline Extra Symbols
-  { 0xe0b9, 0xe0bf, 2 }, -- .. -- Powerline Extra Symbols
-  { 0xe0c0, 0xe0c1, 1 }, -- .. -- Powerline Extra Symbols
-  { 0xe0c2, 0xe0cd, 2 }, -- .. -- Powerline Extra Symbols
-  { 0xe0ce, 0xe0d1, 2 }, -- .. -- Powerline Extra Symbols
-  { 0xe0d2, 0xe0d7, 1 }, -- .. -- Powerline Extra Symbols
-  { 0xe200, 0xe2a9, 2 }, -- .. -- Font Awesome Extension
-  { 0xed00, 0xf2ff, 2 }, -- .. -- Font Awesome
-  { 0x2b58, 0x2b58, 2 }, -- ⭘  --- Power Symbols
-  { 0xe300, 0xe338, 2 }, -- .. -- Weather Icons
-  { 0xe339, 0xe339, 1 }, --  -- Weather Icons
-  { 0xe33a, 0xe33d, 2 }, -- .. -- Weather Icons
-  { 0xe33e, 0xe341, 1 }, -- .. -- Weather Icons
-  { 0xe342, 0xe343, 2 }, -- .. -- Weather Icons
-  { 0xe344, 0xe345, 1 }, -- .. -- Weather Icons
-  { 0xe346, 0xe346, 2 }, --  -- Weather Icons
-  { 0xe347, 0xe34a, 1 }, -- .. -- Weather Icons
-  { 0xe34b, 0xe34d, 2 }, -- .. -- Weather Icons
-  { 0xe34e, 0xe350, 1 }, -- .. -- Weather Icons
-  { 0xe351, 0xe351, 2 }, --  -- Weather Icons
-  { 0xe352, 0xe353, 1 }, -- .. -- Weather Icons
-  { 0xe354, 0xe368, 2 }, -- .. -- Weather Icons
-  { 0xe369, 0xe369, 1 }, --  -- Weather Icons
-  { 0xe36a, 0xe36b, 2 }, -- .. -- Weather Icons
-  { 0xe36c, 0xe36c, 1 }, --  -- Weather Icons
-  { 0xe36d, 0xe37e, 2 }, -- .. -- Weather Icons
-  { 0xe37f, 0xe380, 1 }, -- .. -- Weather Icons
-  { 0xe381, 0xe3c3, 2 }, -- .. -- Weather Icons
-  { 0xe3c4, 0xe3c7, 1 }, -- .. -- Weather Icons
-  { 0xe3c8, 0xe3e3, 2 }, -- .. -- Weather Icons
-  { 0xe5fa, 0xe6b8, 2 }, -- .. -- Seti-UI + Custom
-  { 0xe700, 0xe8ef, 2 }, -- .. -- Devicons
-  { 0xea60, 0xebeb, 2 }, -- .. -- Codicons
-  { 0xf300, 0xf381, 2 }, -- .. -- Font Logos
-  { 0xf400, 0xf533, 2 }, -- .. -- Octicons
-  { 0x2665, 0x2665, 2 }, -- ♥ -- Octicons
+  { 0x23fb, 0x23fe, 1 }, -- ⏻..⏾ -- Power Symbols
+  { 0x2630, 0x2630, 2 }, -- ☰ -- Powerline Extra Symbols
+  { 0x2665, 0x2665, 1 }, -- ♥ -- Octicons
   { 0x26a1, 0x26a1, 2 }, -- ⚡ -- Octicons
+  { 0x276c, 0x2771, 1 }, -- ❬..❱ -- Heavy Angle Brackets
+  { 0x2b58, 0x2b58, 1 }, -- ⭘ -- Power Symbols
+  { 0xe000, 0xe00a, 2 }, -- .. -- Pomicons
+  { 0xe0a0, 0xe0a2, 1 }, -- .. -- Powerline Symbols
+  { 0xe0a3, 0xe0a3, 1 }, --  -- Powerline Extra Symbols
+  { 0xe0b0, 0xe0b3, 1 }, -- .. -- Powerline Symbols
+  { 0xe0b4, 0xe0bf, 1 }, -- .. -- Powerline Extra Symbols
+  { 0xe0c0, 0xe0c8, 2 }, -- .. -- Powerline Extra Symbols
+  { 0xe0ca, 0xe0ca, 2 }, --  -- Powerline Extra Symbols
+  { 0xe0cc, 0xe0d2, 2 }, -- .. -- Powerline Extra Symbols
+  { 0xe0d4, 0xe0d4, 2 }, --  -- Powerline Extra Symbols
+  { 0xe0d6, 0xe0d7, 1 }, -- .. -- Powerline Extra Symbols
+  { 0xe200, 0xe2a9, 2 }, -- .. -- Font Awesome Extension
+  { 0xe300, 0xe3e3, 2 }, -- .. -- Weather Icons
+  { 0xe5fa, 0xe6bb, 2 }, -- .. -- Seti-UI + Custom
+  { 0xe700, 0xe958, 2 }, -- .. -- Devicons
+  { 0xea60, 0xea88, 2 }, -- .. -- Codicons
+  { 0xea8a, 0xea8c, 2 }, -- .. -- Codicons
+  { 0xea8f, 0xeac7, 2 }, -- .. -- Codicons
+  { 0xeac9, 0xeac9, 2 }, --  -- Codicons
+  { 0xeacc, 0xeb09, 2 }, -- .. -- Codicons
+  { 0xeb0b, 0xeb4e, 2 }, -- .. -- Codicons
+  { 0xeb50, 0xec5e, 2 }, -- .. -- Codicons
+  { 0xec60, 0xec84, 2 }, -- .. -- Codicons
+  { 0xed00, 0xedff, 2 }, -- .. -- Font Awesome
+  { 0xee00, 0xee05, 1 }, -- .. -- Progress Bars
+  { 0xee06, 0xee0b, 1 }, -- .. -- Progress Circles
+  { 0xee0c, 0xefcf, 2 }, -- .. -- Font Awesome
+  { 0xf000, 0xf2ff, 2 }, -- .. -- Font Awesome
+  { 0xf300, 0xf385, 2 }, -- .. -- Font Logos
+  { 0xf400, 0xf533, 2 }, -- .. -- Octicons
   { 0xf0001, 0xf1af0, 2 }, -- 󰀁..󱫰 -- Material
 
-  { 0xf6d5, 0xf6d8, 1 }, -- ..
-  { 0xf8ff, 0xf8ff, 1 }, -- 
-  { 0xf0000, 0xf0000, 2 }, -- 󰀀
+  { 0xf6d5, 0xf6d8, 1 }, --  .. 
+  { 0xf8ff, 0xf8ff, 1 }, -- 
 }
