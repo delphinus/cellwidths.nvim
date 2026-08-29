@@ -136,7 +136,7 @@ end
 function CellWidths:load_template(tmpl)
   local result = tmpl:load()
   if not result then
-    self.nvim.log:error("template: %s loading failed: %s", tmpl.name)
+    self.nvim.log:error("template: %s loading failed", tmpl.name)
     return
   end
   self.table:set(result.cw_table)
@@ -173,16 +173,23 @@ function CellWidths:delete(entry)
   return self
 end
 
----@param name string
+--- Removes a user template. The `user/` prefix is filled in when it is left
+--- out, and the template in use is removed when no name is given.
+---@param name string?
 ---@return nil
 function CellWidths:remove(name)
   self.nvim.log:trace("name: %s", name)
-  if self:is_user_template_name(name) then
-    local tmpl = UserTemplate.new(self.nvim, name, function() end)
-    tmpl:remove()
-  else
-    self.nvim.log:error("cannot remove non-user templates: %s", name)
+  local target = name
+  if not target or target == "" then
+    target = self.opts.name
+  elseif not self:is_user_template_name(target) then
+    target = "user/" .. target
   end
+  if not self:is_user_template_name(target) then
+    self.nvim.log:error("cannot remove non-user templates: %s", target)
+    return
+  end
+  UserTemplate.new(self.nvim, target, function() end):remove()
 end
 
 ---@return nil
@@ -227,6 +234,7 @@ function CellWidths:setup_commands()
     return function(info)
       if not self.initialized then
         self.nvim.log:error "not initialized. call setup() at first."
+        return
       end
       f(Args.new(self.nvim, info.args))
     end
@@ -276,14 +284,7 @@ function CellWidths:setup_commands()
   self.nvim.api.nvim_create_user_command(
     "CellWidthsRemove",
     wrap(function(args)
-      local name = args:as_string()
-      if not name or name == "" then
-        self:remove(self.opts.name)
-      elseif name:match "^user%/" then
-        self:remove(name)
-      else
-        self:remove("user/" .. name)
-      end
+      self:remove(args:as_string())
     end),
     { nargs = "?" }
   )
