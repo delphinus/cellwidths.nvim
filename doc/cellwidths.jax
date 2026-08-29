@@ -348,8 +348,17 @@ CAVEATS							    *cellwidths-caveats*
 このプラグインは |setcellwidths()| を実装した最新の Neovim で動作します。
 
 					 *cellwidths-caveats-east-asian-width-w*
-これは |setcellwidths()| 自体の制限ですが、設定する対象の文字は East Asian Width
-が “W” のものに限られます。
+|setcellwidths()| で設定できるのは 0x80 以上のコードポイントで、East Asian
+Width のクラスによる制限はありません。'ambiwidth' の設定よりも優先されます。
+
+ただし Neovim が何桁を確保するかと、端末が何セルを塗るかは別の話です。多くの
+端末は East Asian Width に従い、Ambiguous は狭い側に解決します。そのため:
+
+- “W” 以外に 2 を指定すると、Neovim は 2 桁空けるのに端末は 1 セルしか塗らな
+  いため、余白が空きます。
+- “W” に 1 を指定すると、端末は 2 セルを塗るので次の文字が潰れます。
+
+つまり実際に指定してよい値は、使っている端末の挙動に合わせる必要があります。
 
 https://ja.wikipedia.org/wiki/東アジアの文字幅
 
