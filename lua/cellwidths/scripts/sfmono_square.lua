@@ -94,6 +94,6 @@ return {
   { 0xf400, 0xf533, 2 }, -- .. -- Octicons
   { 0xf0001, 0xf1af0, 2 }, -- 󰀁..󱫰 -- Material
 
-  { 0xf6d5, 0xf6d8, 1 }, --  .. 
-  { 0xf8ff, 0xf8ff, 1 }, -- 
+  { 0xf6d5, 0xf6d8, 1 }, -- ..
+  { 0xf8ff, 0xf8ff, 1 }, -- 
 }
