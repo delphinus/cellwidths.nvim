@@ -1,0 +1,59 @@
+name: Lint
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  stylua:
+    name: StyLua
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: JohnnyMorganz/stylua-action@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          version: latest
+          args: --check .
+
+  typecheck:
+    name: lua-language-server
+    runs-on: ubuntu-latest
+    env:
+      # Keep in step with the version the maintainers use locally.
+      LUALS_VERSION: 3.19.1
+    steps:
+      - uses: actions/checkout@v4
+
+      # Only for its runtime, which gives lua-language-server the types for
+      # `vim`. The version is the same as the one build.yml runs on.
+      - uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: v0.10.3
+
+      - name: install lua-language-server
+        run: |
+          set -eux
+          dir=$RUNNER_TEMP/luals
+          mkdir -p "$dir"
+          curl -fsSL \
+            "https://github.com/LuaLS/lua-language-server/releases/download/$LUALS_VERSION/lua-language-server-$LUALS_VERSION-linux-x64.tar.gz" \
+            | tar xz -C "$dir"
+
+      - name: check
+        run: |
+          set -eux
+          # `--configpath` replaces the config rather than merging into it, so
+          # the committed one is extended with the Neovim runtime here. Editors
+          # get those types from lazydev and friends instead.
+          runtime=$(nvim --headless -c 'echo $VIMRUNTIME' -c quit 2>&1 | tr -d '\r')
+          jq --arg lib "$runtime/lua" '.workspace.library = [$lib]' \
+            .luarc.json > "$RUNNER_TEMP/luarc.json"
+          "$RUNNER_TEMP/luals/bin/lua-language-server" \
+            --check "$PWD/lua/cellwidths" \
+            --configpath "$RUNNER_TEMP/luarc.json" \
+            --checklevel Warning \
+            --logpath "$RUNNER_TEMP/luals-log"
