@@ -1,9 +1,9 @@
----@class Opts
+---@class cellwidths.user_template.Opts
 ---@field listchars { [string]: string }
 ---@field fillchars { [string]: string }
 
 ---@class cellwidths.user_template.UserTemplateTable
----@field opts Opts
+---@field opts cellwidths.user_template.Opts
 ---@field cw_table cellwidths.table.CellWidthTable
 
 local Template = require "cellwidths.template"
@@ -46,7 +46,7 @@ function UserTemplate:load()
     or { cw_table = self.fallback() or {}, clean_up = true, save = true }
 end
 
----@param opts Opts?
+---@param opts cellwidths.user_template.Opts?
 ---@return boolean
 function UserTemplate:has_diff(opts)
   ---@param orig any
@@ -75,7 +75,7 @@ function UserTemplate:create_data(cw_table)
   }
 end
 
----@return Opts
+---@return cellwidths.user_template.Opts
 function UserTemplate:opts()
   return {
     listchars = self.nvim.opt.listchars:get(),

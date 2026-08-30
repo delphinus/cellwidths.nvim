@@ -1,7 +1,7 @@
 ---@alias cellwidths.table.CellWidthEntry integer[]|integer
 ---@alias cellwidths.table.CellWidth 1|2
 ---@alias cellwidths.table.CellWidthTable cellwidths.table.CellWidthEntry[]
----@alias CharWidthMap table<string, cellwidths.table.CellWidth>
+---@alias cellwidths.table.CharWidthMap table<string, cellwidths.table.CellWidth>
 
 ---@class cellwidths.table.Table
 ---@field nvim cellwidths.nvim.Nvim
@@ -49,8 +49,8 @@ function Table:clean_up()
     return true
   end
 
-  ---@param map CharWidthMap
-  ---@return CharWidthMap
+  ---@param map cellwidths.table.CharWidthMap
+  ---@return cellwidths.table.CharWidthMap
   local function remove_overlaps(map)
     for _, opt in ipairs { self.nvim.opt.listchars:get(), self.nvim.opt.fillchars:get() } do
       for _, v in pairs(opt) do
@@ -77,9 +77,9 @@ function Table:clean_up()
   return true
 end
 
----@return CharWidthMap
+---@return cellwidths.table.CharWidthMap
 function Table:char_map()
-  ---@type CharWidthMap
+  ---@type cellwidths.table.CharWidthMap
   local result = {}
   for _, entry in ipairs(self.cw_table) do
     for i = entry[1], entry[2] do
@@ -89,7 +89,7 @@ function Table:char_map()
   return result
 end
 
----@param char_map CharWidthMap
+---@param char_map cellwidths.table.CharWidthMap
 ---@return nil
 function Table:cw_table_from(char_map)
   ---@type integer[][]

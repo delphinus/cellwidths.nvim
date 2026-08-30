@@ -6,12 +6,12 @@ local uv = vim.uv or vim.loop
 ---@class cellwidths.nvim.Api
 ---@field nvim_create_user_command fun(name: string, command: (fun(info: table): nil), opts: any?): nil
 
----@class Option
----@field get fun(self: Option): { [string]: string }
+---@class cellwidths.nvim.Option
+---@field get fun(self: cellwidths.nvim.Option): { [string]: string }
 
 ---@class cellwidths.nvim.Opt
----@field listchars Option
----@field fillchars Option
+---@field listchars cellwidths.nvim.Option
+---@field fillchars cellwidths.nvim.Option
 
 --- Reads the option on every call.
 ---
@@ -19,7 +19,7 @@ local uv = vim.uv or vim.loop
 --- holding on to it would hide any later change to the option from
 --- |cellwidths.table.Table| and |cellwidths.user_template.UserTemplate|.
 ---@param name string
----@return Option
+---@return cellwidths.nvim.Option
 local function option(name)
   return {
     get = function()
