@@ -1,0 +1,52 @@
+name: Lint
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  stylua:
+    name: StyLua
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: JohnnyMorganz/stylua-action@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          version: latest
+          args: --check .
+
+  typecheck:
+    name: lua-language-server
+    runs-on: ubuntu-latest
+    env:
+      LUALS_VERSION: 3.19.1
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: install lua-language-server
+        run: |
+          set -eux
+          dir=$RUNNER_TEMP/luals
+          mkdir -p "$dir"
+          curl -fsSL \
+            "https://github.com/LuaLS/lua-language-server/releases/download/$LUALS_VERSION/lua-language-server-$LUALS_VERSION-linux-x64.tar.gz" \
+            | tar xz -C "$dir"
+
+      # Runs with the .luarc.json in the repository, which declares `vim` a
+      # global rather than pulling in the Neovim runtime types. Loading those
+      # would tie the result to whichever Neovim is installed here: the code
+      # supports several versions at once, and the branches meant for the other
+      # ones then read as errors. `vim.validate()` alone accounts for eight of
+      # them, being called in its 0.11 form behind a `has("nvim-0.11")` guard
+      # that lua-language-server cannot follow.
+      - name: check
+        run: |
+          set -eux
+          "$RUNNER_TEMP/luals/bin/lua-language-server" \
+            --check "$PWD/lua/cellwidths" \
+            --configpath "$PWD/.luarc.json" \
+            --checklevel Warning \
+            --logpath "$RUNNER_TEMP/luals-log"

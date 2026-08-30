@@ -1,7 +1,7 @@
 ---@alias cellwidths.table.CellWidthEntry integer[]|integer
 ---@alias cellwidths.table.CellWidth 1|2
 ---@alias cellwidths.table.CellWidthTable cellwidths.table.CellWidthEntry[]
----@alias CharWidthMap table<string, cellwidths.table.CellWidth>
+---@alias cellwidths.table.CharWidthMap table<string, cellwidths.table.CellWidth>
 
 ---@class cellwidths.table.Table
 ---@field nvim cellwidths.nvim.Nvim
@@ -27,7 +27,7 @@ end
 
 local islist = vim.islist or vim.tbl_islist
 
----@return nil
+---@return boolean # false when the table was rejected and left untouched
 function Table:clean_up()
   ---@param cw_table any
   ---@return boolean
@@ -49,14 +49,19 @@ function Table:clean_up()
     return true
   end
 
-  ---@param map CharWidthMap
-  ---@return CharWidthMap
+  ---@param map cellwidths.table.CharWidthMap
+  ---@return cellwidths.table.CharWidthMap
   local function remove_overlaps(map)
     for _, opt in ipairs { self.nvim.opt.listchars:get(), self.nvim.opt.fillchars:get() } do
       for _, v in pairs(opt) do
-        local key = tostring(self.nvim.fn.char2nr(v, true))
-        if map[key] == 2 then
-          map[key] = 1
+        -- A value can hold more than one character, as `tab` does with
+        -- `tab:▓░`. Every one of them has to stay single width, or
+        -- setcellwidths() rejects the whole table.
+        for _, code in ipairs(self.nvim.fn.str2list(v, true)) do
+          local key = tostring(code)
+          if map[key] == 2 then
+            map[key] = 1
+          end
         end
       end
     end
@@ -65,15 +70,16 @@ function Table:clean_up()
 
   if not is_valid_table(self.cw_table) then
     self.nvim.log:error "invalid table"
-    return
+    return false
   end
   local char_map = remove_overlaps(self:char_map())
   self:cw_table_from(char_map)
+  return true
 end
 
----@return CharWidthMap
+---@return cellwidths.table.CharWidthMap
 function Table:char_map()
-  ---@type CharWidthMap
+  ---@type cellwidths.table.CharWidthMap
   local result = {}
   for _, entry in ipairs(self.cw_table) do
     for i = entry[1], entry[2] do
@@ -83,7 +89,7 @@ function Table:char_map()
   return result
 end
 
----@param char_map CharWidthMap
+---@param char_map cellwidths.table.CharWidthMap
 ---@return nil
 function Table:cw_table_from(char_map)
   ---@type integer[][]
@@ -117,6 +123,7 @@ end
 ---@param width cellwidths.table.CellWidth?
 ---@return cellwidths.table.Table
 function Table:add(entry, width)
+  local saved = vim.deepcopy(self.cw_table)
   if type(entry) == "table" and #entry > 0 then
     local entries = type(entry[1]) == "table" and entry or { entry }
     for _, e in ipairs(entries) do
@@ -128,7 +135,11 @@ function Table:add(entry, width)
     self.nvim.log:error("invalid entry: %s", entry)
     return self
   end
-  self:clean_up()
+  if not self:clean_up() then
+    -- Leaving the rejected entry in place would make every later call fail
+    -- too, so put the table back as it was.
+    self.cw_table = saved
+  end
   return self
 end
 
@@ -159,7 +170,7 @@ end
 ---@return string
 function Table:vim_dump()
   local dumped =
-  self:dump():gsub("{", "[", 1):gsub("}$", "]"):gsub("{ (0x[a-f%d]+), (0x[a-f%d]+), ([12]) },", "[ %1, %2, %3 ],")
+    self:dump():gsub("{", "[", 1):gsub("}$", "]"):gsub("{ (0x[a-f%d]+), (0x[a-f%d]+), ([12]) },", "[ %1, %2, %3 ],")
   return dumped
 end
 

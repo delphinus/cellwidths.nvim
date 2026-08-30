@@ -79,14 +79,15 @@ function Template:save(cw_table)
   end
   local f, err = load("return " .. vim.inspect(self:create_data(cw_table)))
   if not f then
+    self.nvim.uv.fs_close(fd)
     return "failed to create func: " .. err
   end
   local code = string.dump(f, true)
   local result = self.nvim.uv.fs_write(fd, "return " .. vim.inspect(code))
+  self.nvim.uv.fs_close(fd)
   if type(result) ~= "number" then
     return "cannot write code: " .. tostring(result)
   end
-  self.nvim.uv.fs_close(fd)
   self.nvim.log:trace("successfully saved template: %s", self.name)
   return nil
 end
