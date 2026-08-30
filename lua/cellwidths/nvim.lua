@@ -3,6 +3,16 @@ local Log = require "cellwidths.log"
 -- `vim.loop` is deprecated since Neovim 0.10.
 local uv = vim.uv or vim.loop
 
+---@class cellwidths.nvim.Api
+---@field nvim_create_user_command fun(name: string, command: (fun(info: table): nil), opts: any?): nil
+
+---@class Option
+---@field get fun(self: Option): { [string]: string }
+
+---@class cellwidths.nvim.Opt
+---@field listchars Option
+---@field fillchars Option
+
 --- Reads the option on every call.
 ---
 --- `vim.opt.listchars` hands back the value as it is at that moment, so
@@ -17,16 +27,6 @@ local function option(name)
     end,
   }
 end
-
----@class cellwidths.nvim.Api
----@field nvim_create_user_command fun(name: string, command: (fun(info: table): nil), opts: any?): nil
-
----@class Option
----@field get fun(self: Option): { [string]: string }
-
----@class cellwidths.nvim.Opt
----@field listchars Option
----@field fillchars Option
 
 ---@class cellwidths.nvim.Fn
 ---@field setcellwidths fun(tbl: table): nil

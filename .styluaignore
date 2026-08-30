@@ -1,0 +1,2 @@
+# The templates are LuaJIT bytecode written out by scripts/generator.lua.
+lua/cellwidths/templates/
